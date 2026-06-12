@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/utils/rng.dart';
 import '../components/enemy_silhouette.dart';
 import '../components/hero_avatar.dart';
 import '../components/particle_field.dart';
@@ -9,9 +10,9 @@ import '../components/sky_background.dart';
 import 'game_scene.dart';
 
 /// Dark cave / ruins with torchlight and a lurking enemy
-/// (Visual Plan §4 Dungeon Scene).
+/// (Visual Plan §4 Dungeon Scene). The enemy varies each visit.
 class DungeonScene extends GameScene {
-  DungeonScene({required super.heroColor, required super.heroAnim});
+  DungeonScene({required super.heroClassId, required super.heroAnim});
 
   @override
   void build() {
@@ -25,12 +26,15 @@ class DungeonScene extends GameScene {
       priority: 0,
     ));
     add(PropComponent(_drawCave, priority: 2));
-    add(EnemySilhouette(position: Vector2.zero())..priority = 9);
+    add(EnemyComponent(
+      position: Vector2.zero(),
+      type: pick([EnemyType.goblin, EnemyType.wolf, EnemyType.skeleton]),
+    ));
     add(ParticleField(mode: ParticleMode.sparks, color: const Color(0xFFFFC65A), count: 16, priority: 11));
     add(ParticleField(mode: ParticleMode.embers, color: const Color(0xFFFF7B3B), count: 14, priority: 12));
 
     heroAvatar = HeroAvatar(
-        position: Vector2.zero(), heroColor: heroColor, anim: HeroAnim.attack);
+        position: Vector2.zero(), classId: heroClassId, anim: HeroAnim.attack);
     add(heroAvatar!);
   }
 
@@ -38,7 +42,7 @@ class DungeonScene extends GameScene {
   void layout(Vector2 size) {
     final groundY = size.y * 0.80;
     heroAvatar?.position = Vector2(size.x * 0.34, groundY);
-    children.whereType<EnemySilhouette>().forEach((e) {
+    children.whereType<EnemyComponent>().forEach((e) {
       e.position = Vector2(size.x * 0.68, groundY);
     });
   }

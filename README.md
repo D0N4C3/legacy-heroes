@@ -22,19 +22,50 @@ source. On a machine with the [Flutter SDK](https://docs.flutter.dev/get-started
 (3.3+) installed:
 
 ```bash
-# 1. Generate the native platform folders (android/ios/web/…). This reads the
-#    app name from pubspec.yaml and does NOT touch lib/ or assets/.
-flutter create .
+# 1. Generate the native platform folders (android/ios/web/…) with the correct
+#    package name. The --org + project name produce applicationId / bundle id
+#    com.qewiygames.legacyheroes. This does NOT touch lib/ or assets/.
+flutter create --org com.qewiygames --platforms=android,ios .
 
 # 2. Fetch dependencies.
 flutter pub get
 
 # 3. Run on a device, emulator, or the web.
 flutter run            # mobile
-flutter run -d chrome  # quick desktop/browser preview
 ```
 
+Or just run `bash tool/setup.sh`, which does the above and (optionally)
+configures Firebase.
+
 The first launch auto-creates a founding hero and starts the idle loop.
+
+> **Package name:** the Dart package is `legacyheroes` and `--org com.qewiygames`
+> yields **`com.qewiygames.legacyheroes`**. (I can't pre-create the `android/`
+> folder here because it needs a binary `gradle-wrapper.jar` that only
+> `flutter create` generates.)
+
+### Firebase setup (optional — the app runs local-only without it)
+
+Firebase deps are included and the integration is guarded, so the game runs
+before any setup. To turn it on:
+
+```bash
+dart pub global activate flutterfire_cli
+flutterfire configure         # registers com.qewiygames.legacyheroes,
+                              # writes lib/firebase_options.dart + platform files
+```
+
+Then point init at the generated options in
+`lib/core/services/firebase/firebase_service.dart`:
+
+```dart
+import '../../../firebase_options.dart';
+// ...
+await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+```
+
+Once configured, anonymous Auth, Firestore cloud save, Analytics, and
+Crashlytics activate automatically (plan §9).
 
 ### Fast pacing for testing the legacy loop
 
@@ -71,14 +102,22 @@ Signature visuals (Visual & Flame plan):
 - A modular **scene system** — `VillageScene`, `TrainingScene`,
   `DungeonScene`, `BossScene`, `LegacyScene` — that the world swaps between as
   the hero's activity changes.
+- **Class-specific hero sprites** (`lib/game/art/hero_art.dart`): each class has
+  a distinct silhouette, palette, headgear and weapon — Warrior (broadsword +
+  pauldrons + cape), Ranger (hood + bow + cloak), Mage (wizard hat + glowing
+  staff + robe + beard), Paladin (halo + mace + shield), Blacksmith (bandana +
+  apron + warhammer + beard). One `HeroArt` module renders both the animated
+  in-world avatar and every UI portrait, so a hero looks identical everywhere.
+- **Distinct enemies** (`lib/game/art/enemy_art.dart`): goblin, dire wolf,
+  skeleton, and a winged demon boss, each animated with glowing eyes.
 - Reusable fantasy widgets: `FantasyButton`, `ParchmentPanel`,
   `ResourceCounter`, `QuestCard`, `ItemFrame`, `TraitSeal`, `HeroPortrait`.
 - Reward "juice": gold-burst FX, parchment ceremony dialogs, a golden Legacy
   scene for the heir hand-off.
 
-All visuals are **code-generated placeholders** drawn so real PNG/SVG/Lottie
-assets can replace them later (drop them in `assets/images/…` and swap the
-component internals).
+All sprites are drawn with `CustomPainter`/Canvas (no image assets required) and
+isolated in `lib/game/art/`, so swapping in real PNG/SVG art later means editing
+one module. `flutter_svg` is bundled for when you add vector assets.
 
 ---
 

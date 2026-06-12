@@ -1,12 +1,27 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 
-/// Lightweight analytics seam (plan §9 Firebase Analytics events).
-/// Currently logs to the console; swap for FirebaseAnalytics later without
-/// touching call sites.
+import 'firebase/firebase_service.dart';
+
+/// Analytics seam (plan §9). Logs to the console in debug and forwards to
+/// Firebase Analytics when configured. Call sites never change.
 class AnalyticsService {
   void log(String event, [Map<String, Object?> params = const {}]) {
     if (kDebugMode) {
       debugPrint('[analytics] $event ${params.isEmpty ? '' : params}');
+    }
+    if (FirebaseService.instance.ready) {
+      try {
+        // Firebase only accepts non-null String/num values.
+        final clean = <String, Object>{};
+        params.forEach((k, v) {
+          if (v != null) clean[k] = v;
+        });
+        FirebaseAnalytics.instance.logEvent(
+          name: event,
+          parameters: clean.isEmpty ? null : clean,
+        );
+      } catch (_) {/* analytics must never break gameplay */}
     }
   }
 

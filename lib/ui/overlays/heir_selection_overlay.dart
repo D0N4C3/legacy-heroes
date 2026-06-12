@@ -69,7 +69,7 @@ class _HeirCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              HeroPortrait(color: cls.color, size: 56, highlighted: true),
+              HeroPortrait(classId: candidate.classId, size: 56, highlighted: true),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(

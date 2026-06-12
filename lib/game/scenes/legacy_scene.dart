@@ -11,7 +11,7 @@ import 'game_scene.dart';
 /// bathed in golden light (Visual Plan §4 Legacy Scene). The heir cards and
 /// "Continue the Legacy" UI are drawn as a Flutter overlay on top of this.
 class LegacyScene extends GameScene {
-  LegacyScene({required super.heroColor, required super.heroAnim});
+  LegacyScene({required super.heroClassId, required super.heroAnim});
 
   @override
   void build() {

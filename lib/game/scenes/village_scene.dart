@@ -13,7 +13,7 @@ import 'game_scene.dart';
 /// The cozy home base at twilight — hero by the campfire, family banner behind
 /// (Visual Plan §4 Village Scene). The most polished, "living world" screen.
 class VillageScene extends GameScene {
-  VillageScene({required super.heroColor, required super.heroAnim});
+  VillageScene({required super.heroClassId, required super.heroAnim});
 
   late final Campfire _fire;
 
@@ -38,7 +38,7 @@ class VillageScene extends GameScene {
     _fire = Campfire(position: Vector2.zero());
     add(_fire);
 
-    heroAvatar = HeroAvatar(position: Vector2.zero(), heroColor: heroColor, anim: heroAnim);
+    heroAvatar = HeroAvatar(position: Vector2.zero(), classId: heroClassId, anim: heroAnim);
     add(heroAvatar!);
   }
 

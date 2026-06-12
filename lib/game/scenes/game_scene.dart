@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 
 import '../components/game_sized.dart';
@@ -11,14 +9,13 @@ import '../components/hero_avatar.dart';
 /// hero avatar. [LegacyGame] swaps scenes in and out as the player's activity
 /// changes, and pushes hero appearance updates through [applyHero].
 abstract class GameScene extends Component with GameSized {
-  GameScene({required this.heroColor, required this.heroAnim});
+  GameScene({required this.heroClassId, required this.heroAnim});
 
-  Color heroColor;
+  String heroClassId;
   HeroAnim heroAnim;
   HeroAvatar? heroAvatar;
 
-  /// Build the scene's components. Implementations should add their children
-  /// here (background, props, particles, hero/enemy).
+  /// Build the scene's components (background, props, particles, hero/enemy).
   void build();
 
   /// (Re)position size-dependent children. Called on load and on resize.
@@ -36,13 +33,13 @@ abstract class GameScene extends Component with GameSized {
     if (isLoaded && size.x > 0) layout(size);
   }
 
-  /// Update the live hero's class color / animation without rebuilding.
-  void applyHero(Color color, HeroAnim anim) {
-    heroColor = color;
+  /// Update the live hero's class / animation without rebuilding.
+  void applyHero(String classId, HeroAnim anim) {
+    heroClassId = classId;
     heroAnim = anim;
     final h = heroAvatar;
     if (h != null) {
-      h.heroColor = color;
+      h.classId = classId;
       h.anim = anim;
     }
   }

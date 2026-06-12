@@ -52,7 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (hero != null) {
       _game.sync(
         scene: scene,
-        heroColor: hero.classData.color,
+        classId: hero.classId,
         anim: _animFor(scene),
       );
     }

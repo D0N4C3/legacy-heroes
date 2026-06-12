@@ -87,7 +87,7 @@ class _CurrentHeroCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          HeroPortrait(color: hero.classData.color, size: 76, highlighted: true),
+          HeroPortrait(classId: hero.classId, size: 76, highlighted: true),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -135,7 +135,7 @@ class _AncestorCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeroPortrait(color: cls.color, size: 60, memorial: true),
+          HeroPortrait(classId: record.classId, size: 60, memorial: true),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

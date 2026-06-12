@@ -2,7 +2,6 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-import '../app/palette.dart';
 import 'components/fx.dart';
 import 'components/hero_avatar.dart';
 import 'scene_type.dart';
@@ -22,7 +21,7 @@ import 'scenes/village_scene.dart';
 /// calls from the overlays.
 class LegacyGame extends FlameGame {
   SceneType _type = SceneType.village;
-  Color _heroColor = Palette.gold;
+  String _heroClassId = 'warrior';
   HeroAnim _anim = HeroAnim.idle;
   GameScene? _scene;
   bool _ready = false;
@@ -40,17 +39,17 @@ class LegacyGame extends FlameGame {
   /// Push the latest desired visual state from the Flutter/Riverpod layer.
   void sync({
     required SceneType scene,
-    required Color heroColor,
+    required String classId,
     required HeroAnim anim,
   }) {
-    _heroColor = heroColor;
+    _heroClassId = classId;
     _anim = anim;
     if (!_ready) return;
     if (scene != _type || _scene == null) {
       _type = scene;
       _swapScene();
     } else {
-      _scene!.applyHero(heroColor, anim);
+      _scene!.applyHero(classId, anim);
     }
   }
 
@@ -64,15 +63,15 @@ class LegacyGame extends FlameGame {
   GameScene _buildScene(SceneType type) {
     switch (type) {
       case SceneType.village:
-        return VillageScene(heroColor: _heroColor, heroAnim: _anim);
+        return VillageScene(heroClassId: _heroClassId, heroAnim: _anim);
       case SceneType.training:
-        return TrainingScene(heroColor: _heroColor, heroAnim: _anim);
+        return TrainingScene(heroClassId: _heroClassId, heroAnim: _anim);
       case SceneType.dungeon:
-        return DungeonScene(heroColor: _heroColor, heroAnim: _anim);
+        return DungeonScene(heroClassId: _heroClassId, heroAnim: _anim);
       case SceneType.boss:
-        return BossScene(heroColor: _heroColor, heroAnim: _anim);
+        return BossScene(heroClassId: _heroClassId, heroAnim: _anim);
       case SceneType.legacy:
-        return LegacyScene(heroColor: _heroColor, heroAnim: _anim);
+        return LegacyScene(heroClassId: _heroClassId, heroAnim: _anim);
     }
   }
 
@@ -93,7 +92,7 @@ class LegacyGame extends FlameGame {
 
   void playLegacyTransition() => sync(
         scene: SceneType.legacy,
-        heroColor: _heroColor,
+        classId: _heroClassId,
         anim: HeroAnim.idle,
       );
 }

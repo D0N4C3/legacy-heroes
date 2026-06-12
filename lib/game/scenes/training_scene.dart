@@ -11,7 +11,7 @@ import 'game_scene.dart';
 /// Daytime training yard — hero swings at a dummy, dust kicks up
 /// (Visual Plan §4 Training Scene).
 class TrainingScene extends GameScene {
-  TrainingScene({required super.heroColor, required super.heroAnim});
+  TrainingScene({required super.heroClassId, required super.heroAnim});
 
   @override
   void build() {
@@ -27,7 +27,7 @@ class TrainingScene extends GameScene {
     add(ParticleField(mode: ParticleMode.dust, color: const Color(0x88E9D9A0), count: 18, priority: 11));
 
     heroAvatar = HeroAvatar(
-        position: Vector2.zero(), heroColor: heroColor, anim: HeroAnim.train);
+        position: Vector2.zero(), classId: heroClassId, anim: HeroAnim.train);
     add(heroAvatar!);
   }
 

@@ -37,7 +37,7 @@ Future<void> showEquipment(BuildContext context) {
                 ]),
                 const SizedBox(width: 16),
                 Column(children: [
-                  HeroPortrait(color: hero.classData.color, size: 96),
+                  HeroPortrait(classId: hero.classId, size: 96),
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

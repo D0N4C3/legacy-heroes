@@ -77,7 +77,7 @@ class _HeroPanel extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeroPortrait(color: hero.classData.color, size: 58),
+          HeroPortrait(classId: hero.classId, size: 58),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

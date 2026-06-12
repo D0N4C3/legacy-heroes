@@ -11,7 +11,7 @@ import 'game_scene.dart';
 /// A dramatic boss encounter at the Demon Gate — a towering enemy, heavy
 /// lighting, embers everywhere (Visual Plan §4 Boss Scene).
 class BossScene extends GameScene {
-  BossScene({required super.heroColor, required super.heroAnim});
+  BossScene({required super.heroClassId, required super.heroAnim});
 
   @override
   void build() {
@@ -24,13 +24,13 @@ class BossScene extends GameScene {
       priority: 0,
     ));
     add(PropComponent(_drawGate, priority: 2));
-    add(EnemySilhouette(
-        position: Vector2.zero(), boss: true, eyeColor: const Color(0xFFFF3030)));
+    add(EnemyComponent(
+        position: Vector2.zero(), type: EnemyType.demon, boss: true));
     add(ParticleField(mode: ParticleMode.embers, color: const Color(0xFFFF5A2B), count: 30, priority: 11));
     add(ParticleField(mode: ParticleMode.sparks, color: const Color(0xFFFFD27A), count: 18, priority: 12));
 
     heroAvatar = HeroAvatar(
-        position: Vector2.zero(), heroColor: heroColor, anim: HeroAnim.attack, scale: 0.95);
+        position: Vector2.zero(), classId: heroClassId, anim: HeroAnim.attack, scale: 0.95);
     add(heroAvatar!);
   }
 
@@ -38,7 +38,7 @@ class BossScene extends GameScene {
   void layout(Vector2 size) {
     final groundY = size.y * 0.82;
     heroAvatar?.position = Vector2(size.x * 0.28, groundY);
-    children.whereType<EnemySilhouette>().forEach((e) {
+    children.whereType<EnemyComponent>().forEach((e) {
       e.position = Vector2(size.x * 0.70, groundY);
     });
   }
