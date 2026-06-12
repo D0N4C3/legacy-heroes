@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "830044246570",
+    "project_id": "legacy-heroes-821d8",
+    "storage_bucket": "legacy-heroes-821d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830044246570:android:560288ef4de6b534e0a953",
+        "android_client_info": {
+          "package_name": "com.qewiygames.legacyheroes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsFoQur7RHpDq7H1g1QqADtosc1Vb-4Ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
