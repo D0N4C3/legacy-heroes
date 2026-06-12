@@ -1,0 +1,44 @@
+{
+  "classes": [
+    {
+      "id": "warrior",
+      "name": "Warrior",
+      "description": "A frontline bruiser. Higher combat power and survivability.",
+      "color": "#C0492B",
+      "base": { "strength": 12, "agility": 7, "intelligence": 4, "vitality": 11 },
+      "bonuses": { "combatPower": 0.20, "dungeonReward": 0.0, "expeditionSuccess": 0.0, "craftQuality": 0.0, "survival": 0.10 }
+    },
+    {
+      "id": "ranger",
+      "name": "Ranger",
+      "description": "A swift scout. Better expedition success and loot finding.",
+      "color": "#2E7D4F",
+      "base": { "strength": 8, "agility": 12, "intelligence": 7, "vitality": 8 },
+      "bonuses": { "combatPower": 0.05, "dungeonReward": 0.10, "expeditionSuccess": 0.25, "craftQuality": 0.0, "survival": 0.05 }
+    },
+    {
+      "id": "mage",
+      "name": "Mage",
+      "description": "An arcane scholar. Higher dungeon rewards and rare drops.",
+      "color": "#5B4BC4",
+      "base": { "strength": 4, "agility": 6, "intelligence": 13, "vitality": 7 },
+      "bonuses": { "combatPower": 0.10, "dungeonReward": 0.25, "expeditionSuccess": 0.05, "craftQuality": 0.0, "survival": 0.0 }
+    },
+    {
+      "id": "paladin",
+      "name": "Paladin",
+      "description": "A holy guardian. Far better survival chance on risky runs.",
+      "color": "#C9A227",
+      "base": { "strength": 10, "agility": 6, "intelligence": 8, "vitality": 12 },
+      "bonuses": { "combatPower": 0.10, "dungeonReward": 0.05, "expeditionSuccess": 0.05, "craftQuality": 0.0, "survival": 0.25 }
+    },
+    {
+      "id": "blacksmith",
+      "name": "Blacksmith",
+      "description": "A master crafter. Forges better equipment from materials.",
+      "color": "#7A5230",
+      "base": { "strength": 11, "agility": 5, "intelligence": 9, "vitality": 10 },
+      "bonuses": { "combatPower": 0.05, "dungeonReward": 0.05, "expeditionSuccess": 0.10, "craftQuality": 0.30, "survival": 0.05 }
+    }
+  ]
+}

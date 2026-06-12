@@ -1,0 +1,69 @@
+{
+  "activities": [
+    {
+      "id": "training_grounds",
+      "name": "Training Grounds",
+      "scene": "training",
+      "description": "Sharpen skills against the dummies. Safe, steady XP.",
+      "recommendedPower": 10,
+      "durationMinutes": 2,
+      "risk": "none",
+      "goldPerMinute": 6,
+      "xpReward": 80,
+      "lootChance": 0.05,
+      "lootTier": 1
+    },
+    {
+      "id": "forest_hunt",
+      "name": "Forest Hunt",
+      "scene": "dungeon",
+      "description": "Track beasts through the whispering woods.",
+      "recommendedPower": 25,
+      "durationMinutes": 4,
+      "risk": "low",
+      "goldPerMinute": 14,
+      "xpReward": 160,
+      "lootChance": 0.35,
+      "lootTier": 1
+    },
+    {
+      "id": "goblin_cave",
+      "name": "Goblin Cave",
+      "scene": "dungeon",
+      "description": "Clear the cave the village fears. Good loot, some danger.",
+      "recommendedPower": 55,
+      "durationMinutes": 8,
+      "risk": "medium",
+      "goldPerMinute": 26,
+      "xpReward": 340,
+      "lootChance": 0.55,
+      "lootTier": 2
+    },
+    {
+      "id": "ancient_ruins",
+      "name": "Ancient Ruins",
+      "scene": "dungeon",
+      "description": "Forgotten halls hide heirlooms — and traps.",
+      "recommendedPower": 110,
+      "durationMinutes": 15,
+      "risk": "high",
+      "goldPerMinute": 44,
+      "xpReward": 720,
+      "lootChance": 0.7,
+      "lootTier": 3
+    },
+    {
+      "id": "demon_gate",
+      "name": "Demon Gate (Boss)",
+      "scene": "boss",
+      "description": "Face a champion of the abyss. Legendary rewards, real risk.",
+      "recommendedPower": 200,
+      "durationMinutes": 25,
+      "risk": "deadly",
+      "goldPerMinute": 70,
+      "xpReward": 1500,
+      "lootChance": 0.9,
+      "lootTier": 4
+    }
+  ]
+}

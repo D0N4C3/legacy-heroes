@@ -1,0 +1,35 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+
+# Generated platform folders (recreate with `flutter create .`)
+# Tracked-by-default normally, but this repo ships code-first; uncomment to ignore.
+# /android/
+# /ios/
+# /web/
+# /windows/
+# /linux/
+# /macos/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / Firebase
+google-services.json
+GoogleService-Info.plist
+lib/firebase_options.dart
+*.env

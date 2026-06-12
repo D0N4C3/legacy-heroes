@@ -1,0 +1,14 @@
+{
+  "traits": [
+    { "id": "brave",        "name": "Brave",         "positive": true,  "inheritable": true,  "power": 0.06, "survival": 0.05, "desc": "Fear has no hold here." },
+    { "id": "genius",       "name": "Genius",        "positive": true,  "inheritable": true,  "power": 0.05, "reward": 0.10, "desc": "Learns twice as fast." },
+    { "id": "lucky",        "name": "Lucky",         "positive": true,  "inheritable": true,  "reward": 0.12, "loot": 0.10, "desc": "Fortune favors this bloodline." },
+    { "id": "strong_blood", "name": "Strong Blood",  "positive": true,  "inheritable": true,  "power": 0.10, "inherit": 0.05, "desc": "Passes down more strength to heirs." },
+    { "id": "dragon_slayer","name": "Dragon Slayer", "positive": true,  "inheritable": true,  "power": 0.12, "desc": "Earned in fire. Feared by beasts." },
+    { "id": "natural_leader","name": "Natural Leader","positive": true, "inheritable": true,  "power": 0.04, "reward": 0.08, "desc": "Others rally to this name." },
+    { "id": "reckless",     "name": "Reckless",      "positive": false, "inheritable": false, "power": 0.05, "survival": -0.10, "desc": "Hits hard, guards little." },
+    { "id": "cursed",       "name": "Cursed",        "positive": false, "inheritable": true,  "reward": -0.10, "desc": "Shadows follow the line." },
+    { "id": "frail",        "name": "Frail",         "positive": false, "inheritable": false, "power": -0.06, "survival": -0.05, "desc": "A weaker constitution." },
+    { "id": "greedy",       "name": "Greedy",        "positive": false, "inheritable": false, "reward": 0.08, "survival": -0.06, "desc": "Takes one risk too many for gold." }
+  ]
+}
