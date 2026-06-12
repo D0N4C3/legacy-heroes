@@ -1,0 +1,10 @@
+{
+  "prefixes": ["Rusty", "Sturdy", "Fine", "Keen", "Blessed", "Ancient", "Dragonbone", "Eternal"],
+  "weapons": ["Sword", "Bow", "Staff", "Mace", "Dagger", "Warhammer"],
+  "armor": ["Tunic", "Chainmail", "Plate", "Robe", "Leathers"],
+  "helmets": ["Cap", "Hood", "Helm", "Crown"],
+  "rings": ["Band", "Signet", "Loop"],
+  "amulets": ["Pendant", "Charm", "Talisman"],
+  "boots": ["Sandals", "Boots", "Greaves"],
+  "heirlooms": ["Dragonblade", "Eternal Locket", "Founder's Banner", "Oathkeeper Shield", "Bloodline Crown"]
+}

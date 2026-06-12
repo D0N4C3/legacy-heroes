@@ -1,0 +1,39 @@
+name: legacy_heroes
+description: "Legacy Heroes — a semi-AFK generational idle RPG. Build a heroic bloodline across many generations."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Game engine for the living fantasy world (home scene, particles, combat, fx)
+  flame: ^1.18.0
+
+  # State management (plan recommends Riverpod or Bloc over raw setState)
+  flutter_riverpod: ^2.5.1
+
+  # Local-first save (works on weak connections; plan section 11)
+  shared_preferences: ^2.2.3
+
+  # Rewarded ads (primary monetization) are abstracted behind AdService and run
+  # in SIMULATED mode by default so the game is playable with zero ad setup.
+  #
+  # To enable real AdMob ads, uncomment the dependency below, run `flutter pub
+  # get`, add your AdMob App ID to the Android/iOS manifests, initialize
+  # MobileAds in main(), and provide a real AdService (see README "Enabling
+  # AdMob"). NOTE: the Google Mobile Ads SDK auto-initializes and will crash on
+  # launch if the App ID meta-data is missing — that is why it ships disabled.
+  #
+  # google_mobile_ads: ^5.1.0
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/data/
