@@ -5,7 +5,6 @@ import '../../equipment/data/loot_factory.dart';
 import '../../equipment/domain/equipment.dart';
 import '../../family/domain/ancestor.dart';
 import '../domain/hero.dart';
-import '../domain/hero_class.dart';
 import '../domain/life_stage.dart';
 import 'name_pools.dart';
 

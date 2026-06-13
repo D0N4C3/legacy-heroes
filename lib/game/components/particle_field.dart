@@ -90,7 +90,7 @@ class ParticleField extends PositionComponent with GameSized {
       final twinkle = mode == ParticleMode.fireflies
           ? (0.5 + 0.5 * sin(p.life * 6 + p.phase))
           : 1.0;
-      paint.color = color.withOpacity((fade * twinkle).clamp(0.0, 1.0).toDouble() * 0.9);
+      paint.color = color.withValues(alpha: (fade * twinkle).clamp(0.0, 1.0).toDouble() * 0.9);
       canvas.drawCircle(Offset(p.x, p.y), p.size, paint);
     }
   }

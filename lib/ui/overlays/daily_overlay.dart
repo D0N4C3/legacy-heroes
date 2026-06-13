@@ -22,7 +22,7 @@ Future<void> showDailyReward(BuildContext context) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Return each day to grow your dynasty.',
+            const Text('Return each day to grow your dynasty.',
                 style: TextStyle(color: Palette.inkSoft, fontSize: 12)),
             const SizedBox(height: 14),
             Wrap(
@@ -38,7 +38,7 @@ Future<void> showDailyReward(BuildContext context) {
                   width: 84,
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color: claimed ? Palette.parchmentShadow.withOpacity(0.4) : Palette.woodDark,
+                    color: claimed ? Palette.parchmentShadow.withValues(alpha: 0.4) : Palette.woodDark,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: isToday ? Palette.goldLight : Palette.goldDark,

@@ -16,6 +16,7 @@ class SkyBackground extends PositionComponent with GameSized {
     required this.groundColor,
     this.hillColor,
     this.stars = false,
+    this.groundLevel = 0.74,
     int priority = 0,
   }) {
     this.priority = priority;
@@ -27,6 +28,11 @@ class SkyBackground extends PositionComponent with GameSized {
   Color groundColor;
   Color? hillColor;
   bool stars;
+
+  /// Fraction of screen height where the ground band begins. Hill layers are
+  /// derived just above it so scenes can raise/lower the horizon to keep the
+  /// hero clear of HUD overlays.
+  double groundLevel;
 
   double _t = 0;
   final List<Offset> _starField =
@@ -67,19 +73,20 @@ class SkyBackground extends PositionComponent with GameSized {
     // Distant moon / sun glow.
     final glow = Paint()
       ..shader = RadialGradient(
-        colors: [horizonColor.withOpacity(0.55), horizonColor.withOpacity(0)],
+        colors: [horizonColor.withValues(alpha: 0.55), horizonColor.withValues(alpha: 0)],
       ).createShader(Rect.fromCircle(center: Offset(w * 0.78, h * 0.30), radius: w * 0.4));
     canvas.drawRect(rect, glow);
 
-    // Rolling hills (two parallax layers).
+    // Rolling hills (two parallax layers), derived from groundLevel so the
+    // horizon stays just above the ground band.
     final drift = sin(_t * 0.15) * 12;
-    _drawHills(canvas, h * 0.62, (hillColor ?? horizonColor).withOpacity(0.55),
+    _drawHills(canvas, h * (groundLevel - 0.12), (hillColor ?? horizonColor).withValues(alpha: 0.55),
         drift * 0.5, 0.9);
-    _drawHills(canvas, h * 0.70, (hillColor ?? horizonColor).withOpacity(0.85),
+    _drawHills(canvas, h * (groundLevel - 0.04), (hillColor ?? horizonColor).withValues(alpha: 0.85),
         drift, 1.3);
 
     // Ground.
-    final groundRect = Rect.fromLTWH(0, h * 0.74, w, h * 0.26);
+    final groundRect = Rect.fromLTWH(0, h * groundLevel, w, h * (1 - groundLevel));
     final ground = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
@@ -104,6 +111,10 @@ class SkyBackground extends PositionComponent with GameSized {
   Color _darken(Color c, double amount) {
     final f = 1 - amount;
     return Color.fromARGB(
-        c.alpha, (c.red * f).round(), (c.green * f).round(), (c.blue * f).round());
+      (c.a * 255.0).round().clamp(0, 255).toInt(),
+      (c.r * 255.0 * f).round().clamp(0, 255).toInt(),
+      (c.g * 255.0 * f).round().clamp(0, 255).toInt(),
+      (c.b * 255.0 * f).round().clamp(0, 255).toInt(),
+    );
   }
 }

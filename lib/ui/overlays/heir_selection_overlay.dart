@@ -61,7 +61,7 @@ class _HeirCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 7),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Palette.parchment, Palette.parchmentDark]),
+        gradient: const LinearGradient(colors: [Palette.parchment, Palette.parchmentDark]),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Palette.goldDark, width: 2),
       ),
@@ -79,7 +79,7 @@ class _HeirCard extends StatelessWidget {
                         style: const TextStyle(
                             color: Palette.ink, fontWeight: FontWeight.w900, fontSize: 15)),
                     Text('${cls.name} · Inherited Power ${candidate.inheritedPower.round()}',
-                        style: TextStyle(color: Palette.inkSoft, fontSize: 12)),
+                        style: const TextStyle(color: Palette.inkSoft, fontSize: 12)),
                     if (candidate.heirloomName != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 3),

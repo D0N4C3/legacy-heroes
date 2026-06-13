@@ -8,6 +8,7 @@ import '../../state/providers.dart';
 import '../screens/equipment_screen.dart';
 import '../screens/family_tree_screen.dart';
 import '../screens/shop_screen.dart';
+import '../widgets/combat_controls.dart';
 import '../widgets/hero_portrait.dart';
 import '../widgets/resource_counter.dart';
 import 'activity_overlay.dart';
@@ -25,33 +26,64 @@ class HomeHud extends ConsumerWidget {
     final hero = state.hero!;
     final controller = ref.read(gameControllerProvider.notifier);
     final canDaily = controller.canClaimDaily;
+    final combatActive = ref.watch(combatActiveProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          // Resource bar.
-          Row(
-            children: [
-              ResourceCounter(icon: Icons.monetization_on, value: state.gold, color: Palette.gold),
-              const SizedBox(width: 8),
-              ResourceCounter(icon: Icons.diamond, value: state.gems, color: Palette.gem),
-              const Spacer(),
-              _PillButton(
-                icon: Icons.menu_book,
-                badge: 'Gen ${state.generation}',
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => const FamilyTreeScreen())),
-              ),
-            ],
+          // Top cluster: resources + hero panel. Left free so the world
+          // (and hero standing in it) stays visible below.
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    ResourceCounter(icon: Icons.monetization_on, value: state.gold, color: Palette.gold),
+                    const SizedBox(width: 8),
+                    ResourceCounter(icon: Icons.diamond, value: state.gems, color: Palette.gem),
+                    const Spacer(),
+                    _PillButton(
+                      icon: Icons.menu_book,
+                      badge: 'Gen ${state.generation}',
+                      onTap: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => const FamilyTreeScreen())),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                _HeroPanel(hero: hero),
+              ],
+            ),
           ),
-          const SizedBox(height: 10),
-          _HeroPanel(hero: hero),
-          const Spacer(),
-          const _ActivityStatus(),
-          const SizedBox(height: 10),
-          _ActionBar(canDaily: canDaily),
+          // Bottom dock: activity status + action bar, slimmed down so the
+          // hero standing on the new ground line is never covered.
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const _ActivityStatus(),
+                const SizedBox(height: 6),
+                _ActionBar(canDaily: canDaily),
+              ],
+            ),
+          ),
+          // Combat cluster: floats in the freed-up middle band, only while a
+          // dungeon/boss encounter is running (Phase 2).
+          if (combatActive)
+            const Positioned(
+              right: 4,
+              top: 0,
+              bottom: 0,
+              child: Center(child: CombatControls()),
+            ),
         ],
       ),
     );
@@ -68,8 +100,8 @@ class _HeroPanel extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [
-          Palette.woodDark.withOpacity(0.86),
-          Palette.wood.withOpacity(0.7),
+          Palette.woodDark.withValues(alpha: 0.86),
+          Palette.wood.withValues(alpha: 0.7),
         ]),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Palette.goldDark, width: 1.5),
@@ -88,7 +120,7 @@ class _HeroPanel extends StatelessWidget {
                         color: Palette.parchment, fontWeight: FontWeight.w900, fontSize: 15)),
                 Text(
                   '${hero.classData.name} · Lv ${hero.level} · Age ${hero.age} · ${hero.stage.label}',
-                  style: TextStyle(color: Palette.parchment.withOpacity(0.8), fontSize: 11),
+                  style: TextStyle(color: Palette.parchment.withValues(alpha: 0.8), fontSize: 11),
                 ),
                 const SizedBox(height: 6),
                 _XpBar(progress: hero.xpProgress),
@@ -146,7 +178,7 @@ class _ActivityStatus extends ConsumerWidget {
     final def = ref.watch(activeActivityDefProvider);
 
     if (def == null || state.currentActivity == null) {
-      return _StatusPill(
+      return const _StatusPill(
         icon: Icons.local_fire_department,
         text: 'Resting at home — gold trickles in',
         color: Palette.gold,
@@ -159,33 +191,34 @@ class _ActivityStatus extends ConsumerWidget {
     final progress = total == 0 ? 1.0 : 1 - remaining.inSeconds / total;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Palette.woodDark.withOpacity(0.9), Palette.wood.withOpacity(0.8)]),
+        gradient: LinearGradient(colors: [Palette.woodDark.withValues(alpha: 0.9), Palette.wood.withValues(alpha: 0.8)]),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Palette.gold, width: 1.5),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
               Text(def.name,
                   style: const TextStyle(
-                      color: Palette.parchment, fontWeight: FontWeight.w800, fontSize: 13)),
+                      color: Palette.parchment, fontWeight: FontWeight.w800, fontSize: 12)),
               const Spacer(),
               Text(
                 remaining.isNegative ? 'Returning…' : formatDuration(remaining),
                 style: const TextStyle(
-                    color: Palette.goldLight, fontWeight: FontWeight.w800, fontSize: 13),
+                    color: Palette.goldLight, fontWeight: FontWeight.w800, fontSize: 12),
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: LinearProgressIndicator(
               value: progress.clamp(0.0, 1.0).toDouble(),
-              minHeight: 8,
+              minHeight: 6,
               backgroundColor: Palette.woodDark,
               valueColor: const AlwaysStoppedAnimation(Palette.gold),
             ),
@@ -205,20 +238,20 @@ class _StatusPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: Palette.woodDark.withOpacity(0.85),
+        color: Palette.woodDark.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Palette.goldDark, width: 1.5),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 18),
+          Icon(icon, color: color, size: 16),
           const SizedBox(width: 8),
           Flexible(
             child: Text(text,
-                style: TextStyle(color: Palette.parchment.withOpacity(0.9), fontSize: 12)),
+                style: TextStyle(color: Palette.parchment.withValues(alpha: 0.9), fontSize: 12)),
           ),
         ],
       ),
@@ -233,12 +266,12 @@ class _ActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       decoration: BoxDecoration(
         gradient: const LinearGradient(colors: [Palette.wood, Palette.woodDark]),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Palette.goldDark, width: 2),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.4), blurRadius: 8, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.4), blurRadius: 8, offset: const Offset(0, 4))],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -304,17 +337,17 @@ class _ActionIcon extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: RadialGradient(colors: [
-                    (highlight ? Palette.gold : Palette.parchmentShadow).withOpacity(0.9),
+                    (highlight ? Palette.gold : Palette.parchmentShadow).withValues(alpha: 0.9),
                     Palette.woodDark,
                   ]),
                   border: Border.all(
                       color: highlight ? Palette.goldLight : Palette.goldDark, width: 1.5),
                 ),
-                child: Icon(icon, color: Palette.parchment, size: 22),
+                child: Icon(icon, color: Palette.parchment, size: 20),
               ),
               if (badge)
                 Positioned(
@@ -332,10 +365,10 @@ class _ActionIcon extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 2),
           Text(label,
               style: const TextStyle(
-                  color: Palette.parchment, fontSize: 10, fontWeight: FontWeight.w700)),
+                  color: Palette.parchment, fontSize: 9, fontWeight: FontWeight.w700)),
         ],
       ),
     );
@@ -355,7 +388,7 @@ class _PillButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: Palette.woodDark.withOpacity(0.9),
+          color: Palette.woodDark.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Palette.goldDark, width: 1.5),
         ),

@@ -20,7 +20,7 @@ class TraitSeal extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: large ? 12 : 9, vertical: large ? 7 : 5),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [seal.withOpacity(0.9), seal.withOpacity(0.6)]),
+        gradient: LinearGradient(colors: [seal.withValues(alpha: 0.9), seal.withValues(alpha: 0.6)]),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: positive ? Palette.goldLight : Palette.parchment, width: 1.5),
       ),

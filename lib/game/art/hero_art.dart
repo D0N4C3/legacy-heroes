@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 /// Animation states a hero can be drawn in.
 enum HeroAnim { idle, train, attack, victory, hurt }
 
-enum _Weapon { sword, bow, staff, mace, hammer }
+enum Weapon { sword, bow, staff, mace, hammer }
 
-enum _Head { hair, hood, wizardHat, halo, bandana }
+enum Head { hair, hood, wizardHat, halo, bandana }
 
 /// A per-class visual recipe — palette + gear. Hand-tuned so each class reads
 /// instantly even at small sizes (Visual Plan §5 "layer system").
@@ -20,8 +20,8 @@ class HeroVisual {
   final bool hasCloak;
   final bool hasShield;
   final bool beard;
-  final _Weapon weapon;
-  final _Head head;
+  final Weapon weapon;
+  final Head head;
 
   const HeroVisual({
     required this.primary,
@@ -56,8 +56,8 @@ class HeroArt {
       hasCloak: true,
       hasShield: false,
       beard: false,
-      weapon: _Weapon.sword,
-      head: _Head.hair,
+      weapon: Weapon.sword,
+      head: Head.hair,
     ),
     'ranger': HeroVisual(
       primary: Color(0xFF2E7D4F),
@@ -68,8 +68,8 @@ class HeroArt {
       hasCloak: true,
       hasShield: false,
       beard: false,
-      weapon: _Weapon.bow,
-      head: _Head.hood,
+      weapon: Weapon.bow,
+      head: Head.hood,
     ),
     'mage': HeroVisual(
       primary: Color(0xFF5B4BC4),
@@ -80,8 +80,8 @@ class HeroArt {
       hasCloak: false,
       hasShield: false,
       beard: true,
-      weapon: _Weapon.staff,
-      head: _Head.wizardHat,
+      weapon: Weapon.staff,
+      head: Head.wizardHat,
     ),
     'paladin': HeroVisual(
       primary: Color(0xFFE9E2D0),
@@ -92,8 +92,8 @@ class HeroArt {
       hasCloak: true,
       hasShield: true,
       beard: false,
-      weapon: _Weapon.mace,
-      head: _Head.halo,
+      weapon: Weapon.mace,
+      head: Head.halo,
     ),
     'blacksmith': HeroVisual(
       primary: Color(0xFF7A5230),
@@ -104,8 +104,8 @@ class HeroArt {
       hasCloak: false,
       hasShield: false,
       beard: true,
-      weapon: _Weapon.hammer,
-      head: _Head.bandana,
+      weapon: Weapon.hammer,
+      head: Head.bandana,
     ),
   };
 
@@ -113,25 +113,46 @@ class HeroArt {
       _visuals[classId] ?? _visuals['warrior']!;
 
   /// Draw a full-body hero with feet at the local origin (0,0), facing right.
+  ///
+  /// [attackPulse] (0–1) exaggerates the arm swing for a one-shot "hit" on
+  /// tap; [hitFlash] (0–1) briefly tints the hero on taking a counter-hit.
+  /// Both are additive and default to 0 — existing idle/train rendering is
+  /// unchanged.
   static void drawBody(
     Canvas canvas, {
     required String classId,
     required double t,
     required HeroAnim anim,
     required bool blinking,
+    double attackPulse = 0,
+    double hitFlash = 0,
   }) {
     final v = visualFor(classId);
 
     final bob = sin(t * 2) * 1.6;
     final breathe = 1 + sin(t * 3) * 0.03;
-    final lean = anim == HeroAnim.attack ? sin(t * 9).abs() * 0.16 : 0.0;
-    final armSwing = (anim == HeroAnim.attack || anim == HeroAnim.train)
+    var lean = anim == HeroAnim.attack ? sin(t * 9).abs() * 0.16 : 0.0;
+    var armSwing = (anim == HeroAnim.attack || anim == HeroAnim.train)
         ? sin(t * 9) * 0.7
         : sin(t * 2) * 0.06;
     final armsUp = anim == HeroAnim.victory;
 
+    if (attackPulse > 0) {
+      lean += attackPulse * 0.18;
+      armSwing += attackPulse * 1.1;
+    }
+
     canvas.save();
     canvas.translate(0, bob);
+
+    if (hitFlash > 0) {
+      canvas.saveLayer(
+          null,
+          Paint()
+            ..colorFilter = ColorFilter.mode(
+                Color.fromRGBO(255, 70, 70, hitFlash.clamp(0.0, 1.0)),
+                BlendMode.srcATop));
+    }
 
     // Ground shadow.
     canvas.drawOval(
@@ -153,6 +174,9 @@ class HeroArt {
     if (v.hasShield) _drawShield(canvas, v);
 
     canvas.restore(); // lean
+
+    if (hitFlash > 0) canvas.restore(); // flash layer
+
     canvas.restore(); // bob
   }
 
@@ -207,7 +231,7 @@ class HeroArt {
       ).createShader(const Rect.fromLTWH(-19, -24, 38, 46));
 
     // Robe flares for the mage; armor is boxier.
-    if (v.head == _Head.wizardHat) {
+    if (v.head == Head.wizardHat) {
       final robe = Path()
         ..moveTo(-15, -22)
         ..lineTo(15, -22)
@@ -223,7 +247,7 @@ class HeroArt {
 
     // Class-specific torso detail.
     switch (v.head) {
-      case _Head.bandana: // blacksmith apron
+      case Head.bandana: // blacksmith apron
         final apron = Path()
           ..moveTo(-12, -18)
           ..lineTo(12, -18)
@@ -232,19 +256,19 @@ class HeroArt {
           ..close();
         canvas.drawPath(apron, Paint()..color = _darken(v.secondary, 0.1));
         break;
-      case _Head.halo: // paladin chest cross
+      case Head.halo: // paladin chest cross
         canvas.drawRect(const Rect.fromLTWH(-2, -16, 4, 28), Paint()..color = v.accent);
         canvas.drawRect(const Rect.fromLTWH(-9, -6, 18, 4), Paint()..color = v.accent);
         break;
-      case _Head.wizardHat: // mage sash
-        canvas.drawRect(Rect.fromLTWH(-19, 4, 38, 5), Paint()..color = v.accent.withOpacity(0.6));
+      case Head.wizardHat: // mage sash
+        canvas.drawRect(const Rect.fromLTWH(-19, 4, 38, 5), Paint()..color = v.accent.withValues(alpha: 0.6));
         break;
       default:
-        canvas.drawRect(const Rect.fromLTWH(-19, 6, 38, 5), Paint()..color = Color(0x66000000));
+        canvas.drawRect(const Rect.fromLTWH(-19, 6, 38, 5), Paint()..color = const Color(0x66000000));
     }
 
     // Pauldrons (warrior/paladin) for a heavier silhouette.
-    if (v.weapon == _Weapon.sword || v.hasShield) {
+    if (v.weapon == Weapon.sword || v.hasShield) {
       final metal = Paint()..color = v.accent;
       canvas.drawCircle(const Offset(-19, -18), 7, metal);
       canvas.drawCircle(const Offset(19, -18), 7, metal);
@@ -320,8 +344,8 @@ class HeroArt {
 
   static void _drawWeapon(Canvas canvas, HeroVisual v, double t) {
     switch (v.weapon) {
-      case _Weapon.sword:
-        canvas.drawRect(Rect.fromLTWH(-7, -2, 14, 4), Paint()..color = v.accent);
+      case Weapon.sword:
+        canvas.drawRect(const Rect.fromLTWH(-7, -2, 14, 4), Paint()..color = v.accent);
         canvas.drawRRect(
             RRect.fromRectAndRadius(const Rect.fromLTWH(-2.5, -40, 5, 40), const Radius.circular(2)),
             Paint()
@@ -329,14 +353,14 @@ class HeroArt {
                   .createShader(const Rect.fromLTWH(-2.5, -40, 5, 40)));
         canvas.drawCircle(const Offset(0, 2), 3, Paint()..color = _darken(v.accent, 0.2));
         break;
-      case _Weapon.hammer:
+      case Weapon.hammer:
         canvas.drawRect(const Rect.fromLTWH(-2, -34, 4, 36), Paint()..color = const Color(0xFF5A3D24));
         canvas.drawRRect(
             RRect.fromRectAndRadius(const Rect.fromLTWH(-11, -42, 22, 16), const Radius.circular(3)),
             Paint()..color = const Color(0xFF6B7077));
         canvas.drawRect(const Rect.fromLTWH(-11, -42, 4, 16), Paint()..color = const Color(0xFF4A4F55));
         break;
-      case _Weapon.mace:
+      case Weapon.mace:
         canvas.drawRect(const Rect.fromLTWH(-2, -30, 4, 32), Paint()..color = const Color(0xFF5A3D24));
         canvas.drawCircle(const Offset(0, -34), 8, Paint()..color = v.accent);
         for (var i = 0; i < 6; i++) {
@@ -344,15 +368,15 @@ class HeroArt {
           canvas.drawCircle(Offset(cos(a) * 9, -34 + sin(a) * 9), 2.2, Paint()..color = v.accent);
         }
         break;
-      case _Weapon.staff:
+      case Weapon.staff:
         canvas.drawRect(const Rect.fromLTWH(-2, -44, 4, 46), Paint()..color = const Color(0xFF6E4A2A));
         final pulse = 0.7 + 0.3 * sin(t * 4);
         canvas.drawCircle(const Offset(0, -48), 9,
-            Paint()..color = v.accent.withOpacity(0.35 * pulse)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+            Paint()..color = v.accent.withValues(alpha: 0.35 * pulse)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
         canvas.drawCircle(const Offset(0, -48), 5, Paint()..color = v.accent);
         canvas.drawCircle(const Offset(-1.5, -49.5), 2, Paint()..color = Colors.white);
         break;
-      case _Weapon.bow:
+      case Weapon.bow:
         final bow = Paint()
           ..color = const Color(0xFF6E4A2A)
           ..style = PaintingStyle.stroke
@@ -378,7 +402,7 @@ class HeroArt {
 
     // Hair / headgear base.
     switch (v.head) {
-      case _Head.hood:
+      case Head.hood:
         final hood = Path()
           ..moveTo(-16, 2)
           ..quadraticBezierTo(-18, -20, 0, -19)
@@ -388,7 +412,7 @@ class HeroArt {
           ..close();
         canvas.drawPath(hood, Paint()..color = v.cloak);
         break;
-      case _Head.wizardHat:
+      case Head.wizardHat:
         _drawHair(canvas, const Color(0xFFDDDDDD));
         final brim = Paint()..color = v.primary;
         canvas.drawOval(const Rect.fromLTWH(-20, -8, 40, 9), brim);
@@ -400,11 +424,11 @@ class HeroArt {
         canvas.drawPath(hat, Paint()..color = v.primaryLight);
         canvas.drawCircle(const Offset(6, -40), 3, Paint()..color = v.accent);
         break;
-      case _Head.bandana:
+      case Head.bandana:
         _drawHair(canvas, _hair);
         canvas.drawRect(const Rect.fromLTWH(-15, -8, 30, 7), Paint()..color = v.accent);
         break;
-      case _Head.halo:
+      case Head.halo:
         _drawHair(canvas, const Color(0xFFE7C96A));
         canvas.drawCircle(const Offset(0, -20), 12,
             Paint()
@@ -413,7 +437,7 @@ class HeroArt {
               ..strokeWidth = 3
               ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.5));
         break;
-      case _Head.hair:
+      case Head.hair:
         _drawHair(canvas, _hair);
         break;
     }
@@ -439,7 +463,7 @@ class HeroArt {
         ..quadraticBezierTo(0, 26, 9, 6)
         ..quadraticBezierTo(0, 14, -9, 6)
         ..close();
-      canvas.drawPath(beard, Paint()..color = v.head == _Head.wizardHat ? const Color(0xFFE8E8E8) : const Color(0xFF6E4A2A));
+      canvas.drawPath(beard, Paint()..color = v.head == Head.wizardHat ? const Color(0xFFE8E8E8) : const Color(0xFF6E4A2A));
     }
     canvas.restore();
   }
@@ -456,6 +480,13 @@ class HeroArt {
   }
 
   // ── Color helpers ───────────────────────────────────────────────────────
-  static Color _darken(Color c, double a) => Color.fromARGB(c.alpha,
-      (c.red * (1 - a)).round(), (c.green * (1 - a)).round(), (c.blue * (1 - a)).round());
+  static Color _darken(Color c, double a) {
+    final f = 1 - a;
+    return Color.fromARGB(
+      (c.a * 255.0).round().clamp(0, 255).toInt(),
+      (c.r * 255.0 * f).round().clamp(0, 255).toInt(),
+      (c.g * 255.0 * f).round().clamp(0, 255).toInt(),
+      (c.b * 255.0 * f).round().clamp(0, 255).toInt(),
+    );
+  }
 }

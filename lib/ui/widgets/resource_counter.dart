@@ -24,12 +24,12 @@ class ResourceCounter extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(6, 4, 10, 4),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Palette.woodDark.withOpacity(0.92), Palette.wood.withOpacity(0.92)],
+          colors: [Palette.woodDark.withValues(alpha: 0.92), Palette.wood.withValues(alpha: 0.92)],
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Palette.goldDark, width: 1.5),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2)),
         ],
       ),
       child: Row(
@@ -37,7 +37,7 @@ class ResourceCounter extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(color: color.withOpacity(0.25), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.25), shape: BoxShape.circle),
             child: Icon(icon, size: 16, color: color),
           ),
           const SizedBox(width: 6),

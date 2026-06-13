@@ -45,7 +45,7 @@ Future<void> showRewards(BuildContext context, WidgetRef ref, LegacyGame game) {
               _RewardRow(icon: Icons.star, color: Palette.xp, label: 'XP', value: '+${formatCompact(result.xp)}'),
               if (result.loot.isNotEmpty) ...[
                 const SizedBox(height: 10),
-                Text('Loot found',
+                const Text('Loot found',
                     style: TextStyle(color: Palette.inkSoft, fontWeight: FontWeight.w700, fontSize: 12)),
                 const SizedBox(height: 6),
                 Wrap(

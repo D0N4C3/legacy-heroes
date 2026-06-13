@@ -28,7 +28,7 @@ class ParchmentPanel extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: Palette.goldDark, width: 3),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.45), blurRadius: 16, offset: const Offset(0, 8)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.45), blurRadius: 16, offset: const Offset(0, 8)),
         ],
       ),
       child: Column(

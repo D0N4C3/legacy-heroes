@@ -35,7 +35,7 @@ class DamageNumber extends PositionComponent {
     final fade = (1 - _life / _maxLife).clamp(0.0, 1.0).toDouble();
     final paint = TextPaint(
       style: TextStyle(
-        color: color.withOpacity(fade),
+        color: color.withValues(alpha: fade),
         fontSize: 26,
         fontWeight: FontWeight.w800,
         shadows: const [
@@ -87,8 +87,8 @@ class GoldBurst extends PositionComponent {
   @override
   void render(Canvas canvas) {
     final fade = (1 - _life / _maxLife).clamp(0.0, 1.0).toDouble();
-    final gold = Paint()..color = const Color(0xFFE7B53C).withOpacity(fade);
-    final shine = Paint()..color = const Color(0xFFFBE08A).withOpacity(fade);
+    final gold = Paint()..color = const Color(0xFFE7B53C).withValues(alpha: fade);
+    final shine = Paint()..color = const Color(0xFFFBE08A).withValues(alpha: fade);
     for (final c in _coins) {
       canvas.drawCircle(Offset(c.pos.x, c.pos.y), c.size, gold);
       canvas.drawCircle(

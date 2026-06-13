@@ -16,7 +16,7 @@ Future<T?> showFantasySheet<T>(
     isDismissible: dismissible,
     enableDrag: dismissible,
     backgroundColor: Colors.transparent,
-    barrierColor: Colors.black.withOpacity(0.6),
+    barrierColor: Colors.black.withValues(alpha: 0.6),
     builder: (ctx) => Padding(
       padding: EdgeInsets.only(
         left: 14,
@@ -45,7 +45,7 @@ Future<T?> showFantasyDialog<T>(
     context: context,
     barrierDismissible: dismissible,
     barrierLabel: title,
-    barrierColor: Colors.black.withOpacity(0.7),
+    barrierColor: Colors.black.withValues(alpha: 0.7),
     transitionDuration: const Duration(milliseconds: 220),
     pageBuilder: (ctx, a1, a2) => Center(
       child: Padding(

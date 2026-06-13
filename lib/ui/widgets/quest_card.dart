@@ -51,7 +51,7 @@ class QuestCard extends StatelessWidget {
           border: Border.all(
               color: running ? Palette.goldLight : Palette.goldDark, width: 2),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 5, offset: const Offset(0, 3)),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 5, offset: const Offset(0, 3)),
           ],
         ),
         child: Padding(
@@ -74,7 +74,7 @@ class QuestCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            color: Palette.parchment.withOpacity(0.75), fontSize: 11)),
+                            color: Palette.parchment.withValues(alpha: 0.75), fontSize: 11)),
                     const SizedBox(height: 6),
                     Row(
                       children: [
@@ -109,17 +109,17 @@ class QuestCard extends StatelessWidget {
   Widget _chip(IconData icon, String text) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 13, color: Palette.parchment.withOpacity(0.8)),
+          Icon(icon, size: 13, color: Palette.parchment.withValues(alpha: 0.8)),
           const SizedBox(width: 3),
           Text(text,
-              style: TextStyle(color: Palette.parchment.withOpacity(0.85), fontSize: 11)),
+              style: TextStyle(color: Palette.parchment.withValues(alpha: 0.85), fontSize: 11)),
         ],
       );
 
   Widget _skulls(RiskLevel risk) {
     if (risk.skulls == 0) {
       return Text('Safe',
-          style: TextStyle(color: Palette.success.withOpacity(0.9), fontSize: 11));
+          style: TextStyle(color: Palette.success.withValues(alpha: 0.9), fontSize: 11));
     }
     return Row(
       mainAxisSize: MainAxisSize.min,

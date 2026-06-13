@@ -100,7 +100,7 @@ class _ShopRow extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Palette.parchment, Palette.parchmentDark]),
+        gradient: const LinearGradient(colors: [Palette.parchment, Palette.parchmentDark]),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Palette.goldDark, width: 1.5),
       ),
@@ -109,7 +109,7 @@ class _ShopRow extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               shape: BoxShape.circle,
               border: Border.all(color: color, width: 1.5),
             ),
@@ -123,7 +123,7 @@ class _ShopRow extends StatelessWidget {
                 Text(title,
                     style: const TextStyle(
                         color: Palette.ink, fontWeight: FontWeight.w800, fontSize: 14)),
-                Text(subtitle, style: TextStyle(color: Palette.inkSoft, fontSize: 11)),
+                Text(subtitle, style: const TextStyle(color: Palette.inkSoft, fontSize: 11)),
               ],
             ),
           ),

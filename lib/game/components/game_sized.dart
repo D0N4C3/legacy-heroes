@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/game.dart';
 
 /// Mixin giving a component the current game canvas size, so scene elements
 /// can lay themselves out responsively in screen space.

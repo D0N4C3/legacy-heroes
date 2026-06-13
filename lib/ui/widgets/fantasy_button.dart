@@ -64,7 +64,7 @@ class _FantasyButtonState extends State<FantasyButton> {
               border: Border.all(color: Palette.goldDark, width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.35),
+                  color: Colors.black.withValues(alpha: 0.35),
                   blurRadius: 6,
                   offset: const Offset(0, 3),
                 ),

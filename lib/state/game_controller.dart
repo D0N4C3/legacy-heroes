@@ -229,24 +229,13 @@ class GameController extends StateNotifier<GameState> {
     var gold = state.gold + result.gold;
     final inventory = [...state.inventory, ...result.loot];
 
-    // XP & leveling (plan §7).
-    var level = hero.level;
-    var xp = hero.xp + result.xp;
-    final achievements = [...hero.achievements];
-    while (level < GameConstants.maxLevel &&
-        xp >= GameConstants.xpForLevel(level)) {
-      xp -= GameConstants.xpForLevel(level);
-      level++;
-    }
-    if (level > hero.level && level % 5 == 0) {
-      achievements.add('Reached level $level');
-    }
+    final (leveledHero, levelAchievements) = _applyXp(hero, result.xp);
+    final achievements = [...hero.achievements, ...levelAchievements];
     if (result.loot.any((e) => e.isHeirloom)) {
       achievements.add('Recovered a family heirloom');
     }
 
-    final updatedHero =
-        hero.copyWith(level: level, xp: xp, achievements: achievements);
+    final updatedHero = leveledHero.copyWith(achievements: achievements);
 
     state = state.copyWith(
       gold: gold,
@@ -259,6 +248,38 @@ class GameController extends StateNotifier<GameState> {
     if (!result.survived) {
       _beginLegacyTransition(retired: false, cause: 'Fell in battle');
     }
+    _persist();
+  }
+
+  /// Apply XP to [hero], rolling level-ups (plan §7: XP required = level²×100).
+  /// Returns the updated hero plus any milestone achievements earned.
+  (HeroData, List<String>) _applyXp(HeroData hero, int xp) {
+    var level = hero.level;
+    var remaining = hero.xp + xp;
+    final achievements = <String>[];
+    while (level < GameConstants.maxLevel &&
+        remaining >= GameConstants.xpForLevel(level)) {
+      remaining -= GameConstants.xpForLevel(level);
+      level++;
+    }
+    if (level > hero.level && level % 5 == 0) {
+      achievements.add('Reached level $level');
+    }
+    return (hero.copyWith(level: level, xp: remaining), achievements);
+  }
+
+  /// Small immediate gold/XP trickle from the real-time combat mini-game
+  /// (Phase 2). Purely additive — does not touch [_resolveActivity]'s
+  /// success/loot roll or the staged [ActivityResult].
+  void addCombatReward({required int gold, required int xp}) {
+    final hero = state.hero;
+    if (hero == null) return;
+    final (leveledHero, levelAchievements) = _applyXp(hero, xp);
+    final achievements = [...hero.achievements, ...levelAchievements];
+    state = state.copyWith(
+      gold: state.gold + gold,
+      hero: leveledHero.copyWith(achievements: achievements),
+    );
     _persist();
   }
 

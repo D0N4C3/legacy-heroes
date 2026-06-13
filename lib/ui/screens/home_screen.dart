@@ -57,6 +57,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
 
+    // Push the Phase 2 combat mini-game's live state (HP, hits, approach)
+    // onto the active scene every frame it changes.
+    final combat = ref.watch(combatControllerProvider);
+    _game.syncCombat(combat);
+
     // Auto-surface offline report, rewards, and the heir ceremony.
     _wireListeners();
 
@@ -95,10 +100,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       while (mounted) {
         final s = ref.read(gameControllerProvider);
         if (s.awaitingHeir) {
+          if (!mounted) return;
           await showHeirSelection(context, ref, _game);
         } else if (s.offlineReport != null) {
+          if (!mounted) return;
           await showOfflineReport(context, ref, _game);
         } else if (s.pendingResult != null) {
+          if (!mounted) return;
           await showRewards(context, ref, _game);
         } else {
           break;

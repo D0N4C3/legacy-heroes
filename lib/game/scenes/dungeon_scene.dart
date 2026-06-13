@@ -23,6 +23,7 @@ class DungeonScene extends GameScene {
       groundColor: const Color(0xFF241A2E),
       hillColor: const Color(0xFF1A1026),
       stars: true,
+      groundLevel: 0.62,
       priority: 0,
     ));
     add(PropComponent(_drawCave, priority: 2));
@@ -40,7 +41,7 @@ class DungeonScene extends GameScene {
 
   @override
   void layout(Vector2 size) {
-    final groundY = size.y * 0.80;
+    final groundY = size.y * 0.62;
     heroAvatar?.position = Vector2(size.x * 0.34, groundY);
     children.whereType<EnemyComponent>().forEach((e) {
       e.position = Vector2(size.x * 0.68, groundY);
@@ -50,21 +51,21 @@ class DungeonScene extends GameScene {
   void _drawCave(Canvas canvas, Vector2 size) {
     // Cave mouth vignette.
     final vignette = Paint()
-      ..shader = RadialGradient(
-        colors: [const Color(0x00000000), const Color(0xCC000000)],
-        stops: const [0.55, 1.0],
+      ..shader = const RadialGradient(
+        colors: [Color(0x00000000), Color(0xCC000000)],
+        stops: [0.55, 1.0],
       ).createShader(Rect.fromCircle(
           center: Offset(size.x * 0.5, size.y * 0.5), radius: size.x * 0.7));
     canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), vignette);
 
     // Two torches.
     void torch(double x) {
-      final groundY = size.y * 0.80;
+      final groundY = size.y * 0.62;
       canvas.drawRect(Rect.fromLTWH(x - 2, groundY - 80, 4, 50),
           Paint()..color = const Color(0xFF3A2615));
       final glow = Paint()
         ..shader = RadialGradient(colors: [
-          const Color(0xFFFFB347).withOpacity(0.6),
+          const Color(0xFFFFB347).withValues(alpha: 0.6),
           const Color(0x00FFB347),
         ]).createShader(Rect.fromCircle(center: Offset(x, groundY - 84), radius: 36));
       canvas.drawCircle(Offset(x, groundY - 84), 36, glow);

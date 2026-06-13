@@ -21,6 +21,7 @@ class TrainingScene extends GameScene {
       horizonColor: const Color(0xFFE7D89A),
       groundColor: const Color(0xFF7A8B3A),
       hillColor: const Color(0xFF6FA05A),
+      groundLevel: 0.62,
       priority: 0,
     ));
     add(PropComponent(_drawDummy, priority: 3));
@@ -33,12 +34,12 @@ class TrainingScene extends GameScene {
 
   @override
   void layout(Vector2 size) {
-    final groundY = size.y * 0.80;
+    final groundY = size.y * 0.62;
     heroAvatar?.position = Vector2(size.x * 0.42, groundY);
   }
 
   void _drawDummy(Canvas canvas, Vector2 size) {
-    final groundY = size.y * 0.80;
+    final groundY = size.y * 0.62;
     final x = size.x * 0.62;
     final post = Paint()..color = const Color(0xFF6E4A2A);
     canvas.drawRect(Rect.fromLTWH(x - 4, groundY - 70, 8, 70), post);

@@ -48,7 +48,7 @@ class FamilyTreeScreen extends ConsumerWidget {
               Center(
                 child: Text('— Ancestors —',
                     style: TextStyle(
-                        color: Palette.parchment.withOpacity(0.7),
+                        color: Palette.parchment.withValues(alpha: 0.7),
                         fontWeight: FontWeight.w700,
                         letterSpacing: 2)),
               ),
@@ -60,7 +60,7 @@ class FamilyTreeScreen extends ConsumerWidget {
                 child: Text(
                   'Your dynasty begins here.\nOne day, ${hero.name.split(' ').first}\nwill be remembered on this tree.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Palette.parchment.withOpacity(0.7), height: 1.5),
+                  style: TextStyle(color: Palette.parchment.withValues(alpha: 0.7), height: 1.5),
                 ),
               ),
             ],
@@ -80,10 +80,10 @@ class _CurrentHeroCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Palette.gold.withOpacity(0.25), Palette.woodDark]),
+        gradient: LinearGradient(colors: [Palette.gold.withValues(alpha: 0.25), Palette.woodDark]),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: Palette.goldLight, width: 2.5),
-        boxShadow: [BoxShadow(color: Palette.goldLight.withOpacity(0.3), blurRadius: 16)],
+        boxShadow: [BoxShadow(color: Palette.goldLight.withValues(alpha: 0.3), blurRadius: 16)],
       ),
       child: Row(
         children: [
@@ -101,7 +101,7 @@ class _CurrentHeroCard extends StatelessWidget {
                     style: const TextStyle(
                         color: Palette.parchment, fontWeight: FontWeight.w900, fontSize: 18)),
                 Text('Generation ${hero.generation} ${hero.classData.name} · Lv ${hero.level} · Age ${hero.age}',
-                    style: TextStyle(color: Palette.parchment.withOpacity(0.8), fontSize: 12)),
+                    style: TextStyle(color: Palette.parchment.withValues(alpha: 0.8), fontSize: 12)),
                 const SizedBox(height: 6),
                 Wrap(
                   spacing: 6,
@@ -128,9 +128,9 @@ class _AncestorCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Palette.woodDark.withOpacity(0.8),
+        color: Palette.woodDark.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Palette.gold.withOpacity(0.6), width: 1.5),
+        border: Border.all(color: Palette.gold.withValues(alpha: 0.6), width: 1.5),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,9 +153,9 @@ class _AncestorCard extends StatelessWidget {
                   ],
                 ),
                 Text('Generation ${record.generation} ${cls.name} · Lv ${record.level}',
-                    style: TextStyle(color: Palette.parchment.withOpacity(0.75), fontSize: 11)),
+                    style: TextStyle(color: Palette.parchment.withValues(alpha: 0.75), fontSize: 11)),
                 Text('${record.lifespan} · ${record.causeOfEnd}',
-                    style: TextStyle(color: Palette.parchment.withOpacity(0.6), fontSize: 11)),
+                    style: TextStyle(color: Palette.parchment.withValues(alpha: 0.6), fontSize: 11)),
                 const SizedBox(height: 4),
                 Text('“${record.biggestAchievement}”',
                     style: const TextStyle(

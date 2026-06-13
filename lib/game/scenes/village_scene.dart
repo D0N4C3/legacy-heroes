@@ -25,6 +25,7 @@ class VillageScene extends GameScene {
       horizonColor: Palette.skyHorizon,
       groundColor: const Color(0xFF4A6B3A),
       hillColor: const Color(0xFF5A3D6E),
+      groundLevel: 0.62,
       priority: 0,
     ));
 
@@ -44,13 +45,13 @@ class VillageScene extends GameScene {
 
   @override
   void layout(Vector2 size) {
-    final groundY = size.y * 0.80;
+    final groundY = size.y * 0.62;
     heroAvatar?.position = Vector2(size.x * 0.42, groundY);
     _fire.position = Vector2(size.x * 0.66, groundY - 4);
   }
 
   void _drawHome(Canvas canvas, Vector2 size) {
-    final baseY = size.y * 0.80;
+    final baseY = size.y * 0.62;
     final hx = size.x * 0.30;
 
     // Cottage body.

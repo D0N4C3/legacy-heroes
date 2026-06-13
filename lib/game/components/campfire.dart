@@ -27,8 +27,8 @@ class Campfire extends PositionComponent {
     final glow = Paint()
       ..shader = RadialGradient(
         colors: [
-          const Color(0xFFFFB347).withOpacity(0.5 * flicker),
-          const Color(0xFFFFB347).withOpacity(0),
+          const Color(0xFFFFB347).withValues(alpha: 0.5 * flicker),
+          const Color(0xFFFFB347).withValues(alpha: 0),
         ],
       ).createShader(Rect.fromCircle(center: Offset.zero, radius: 70 * flicker));
     canvas.drawCircle(Offset.zero, 70 * flicker, glow);

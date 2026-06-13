@@ -62,8 +62,8 @@ class LegacyScene extends GameScene {
     // Glowing canopy.
     final canopy = Paint()
       ..shader = RadialGradient(colors: [
-        const Color(0xFF6FA05A).withOpacity(0.9),
-        const Color(0xFF3A5A2A).withOpacity(0.6),
+        const Color(0xFF6FA05A).withValues(alpha: 0.9),
+        const Color(0xFF3A5A2A).withValues(alpha: 0.6),
       ]).createShader(Rect.fromCircle(
           center: Offset(baseX, groundY - 220), radius: size.x * 0.4));
     canvas.drawCircle(Offset(baseX, groundY - 220), size.x * 0.34, canopy);
@@ -75,7 +75,7 @@ class LegacyScene extends GameScene {
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [Palette.goldLight.withOpacity(0.28), Palette.goldLight.withOpacity(0)],
+        colors: [Palette.goldLight.withValues(alpha: 0.28), Palette.goldLight.withValues(alpha: 0)],
       ).createShader(Rect.fromLTWH(cx - 80, 0, 160, size.y));
     final path = Path()
       ..moveTo(cx - 40, 0)

@@ -1,7 +1,7 @@
-import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
+import '../features/combat/domain/combat_state.dart';
 import 'components/fx.dart';
 import 'components/hero_avatar.dart';
 import 'scene_type.dart';
@@ -53,6 +53,13 @@ class LegacyGame extends FlameGame {
     }
   }
 
+  /// Push the combat mini-game's latest live state (Phase 2) onto the active
+  /// scene's hero/enemy. Mirrors [sync]'s one-way data flow.
+  void syncCombat(CombatState combat) {
+    if (!_ready) return;
+    _scene?.applyCombat(combat);
+  }
+
   void _swapScene() {
     _scene?.removeFromParent();
     final s = _buildScene(_type);
@@ -76,15 +83,15 @@ class LegacyGame extends FlameGame {
   }
 
   // ── Signature FX hooks (Visual Plan §9 LegacyGame API) ───────────────────
-  void showGoldBurst() {
+  void showGoldBurst({Vector2? position}) {
     if (!_ready) return;
-    add(GoldBurst(position: size / 2));
+    add(GoldBurst(position: position ?? size / 2));
   }
 
-  void showDamageNumber(int amount, {Color? color}) {
+  void showDamageNumber(int amount, {Vector2? position, Color? color}) {
     if (!_ready) return;
     add(DamageNumber(
-      position: Vector2(size.x * 0.55, size.y * 0.5),
+      position: position ?? Vector2(size.x * 0.55, size.y * 0.5),
       text: '$amount',
       color: color ?? const Color(0xFFFFE08A),
     ));

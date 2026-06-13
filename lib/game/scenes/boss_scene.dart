@@ -14,6 +14,12 @@ class BossScene extends GameScene {
   BossScene({required super.heroClassId, required super.heroAnim});
 
   @override
+  double get combatBaseX => 0.28;
+
+  @override
+  double get combatEngageX => 0.46;
+
+  @override
   void build() {
     add(SkyBackground(
       topColor: const Color(0xFF1A0608),
@@ -21,6 +27,7 @@ class BossScene extends GameScene {
       horizonColor: const Color(0xFF7A1E16),
       groundColor: const Color(0xFF2A1012),
       hillColor: const Color(0xFF120406),
+      groundLevel: 0.64,
       priority: 0,
     ));
     add(PropComponent(_drawGate, priority: 2));
@@ -36,7 +43,7 @@ class BossScene extends GameScene {
 
   @override
   void layout(Vector2 size) {
-    final groundY = size.y * 0.82;
+    final groundY = size.y * 0.64;
     heroAvatar?.position = Vector2(size.x * 0.28, groundY);
     children.whereType<EnemyComponent>().forEach((e) {
       e.position = Vector2(size.x * 0.70, groundY);
@@ -45,7 +52,7 @@ class BossScene extends GameScene {
 
   void _drawGate(Canvas canvas, Vector2 size) {
     final cx = size.x * 0.70;
-    final groundY = size.y * 0.82;
+    final groundY = size.y * 0.64;
     // Ominous archway behind the boss.
     final arch = Paint()..color = const Color(0xFF0A0204);
     final path = Path()
@@ -58,7 +65,7 @@ class BossScene extends GameScene {
     // Hellish inner glow.
     final glow = Paint()
       ..shader = RadialGradient(colors: [
-        const Color(0xFFFF3A1A).withOpacity(0.5),
+        const Color(0xFFFF3A1A).withValues(alpha: 0.5),
         const Color(0x00FF3A1A),
       ]).createShader(Rect.fromCircle(center: Offset(cx, groundY - 110), radius: 110));
     canvas.drawPath(path, glow);

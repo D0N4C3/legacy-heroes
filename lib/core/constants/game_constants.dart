@@ -54,6 +54,33 @@ class GameConstants {
   static const double minSuccessChance = 0.15;
   static const double maxSuccessChance = 0.99;
 
+  // ── Combat mini-game (Phase 2 — additive bonus layer) ───────────────────
+  /// Enemy max HP ≈ hero.power * factor, scaled up for higher loot tiers.
+  static const double combatEnemyHealthFactor = 0.35;
+  static const double combatEnemyHealthTierBonus = 0.15;
+
+  /// Enemy attack per counter-hit ≈ hero.power * factor, scaled by tier.
+  static const double combatEnemyAttackFactor = 0.04;
+  static const double combatEnemyAttackTierBonus = 0.1;
+
+  /// Hero damage per attack ≈ hero.power * factor.
+  static const double combatHeroAttackFactor = 0.12;
+
+  /// Hero combat max HP = base + vitality * perVitality.
+  static const double combatHeroHealthBase = 50;
+  static const double combatHeroHealthPerVitality = 5;
+
+  /// Bonus gold/XP per kill, as a fraction of the activity's normal rewards —
+  /// on top of, not instead of, the end-of-activity success/loot roll.
+  static const double combatGoldRewardFraction = 0.2; // of goldPerMinute
+  static const double combatXpRewardFraction = 0.03; // of xpReward
+
+  /// How often Auto mode advances the encounter (run forward + attack).
+  static const Duration combatAutoInterval = Duration(milliseconds: 1100);
+
+  /// Number of foes kept queued during an encounter.
+  static const int combatQueueSize = 3;
+
   // ── Daily rewards (plan §6.9) ───────────────────────────────────────────
   static const List<Map<String, int>> dailyRewards = [
     {'gold': 150, 'gems': 0},

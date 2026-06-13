@@ -28,7 +28,7 @@ Future<void> showActivityBoard(BuildContext context) {
               child: Text(
                 'Send ${hero.name.split(' ').first} on an adventure. Rewards arrive even while you are away.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Palette.inkSoft, fontSize: 12),
+                style: const TextStyle(color: Palette.inkSoft, fontSize: 12),
               ),
             ),
             ...activities.map((a) {

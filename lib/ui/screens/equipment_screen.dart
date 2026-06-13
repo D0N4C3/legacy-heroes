@@ -64,7 +64,7 @@ Future<void> showEquipment(BuildContext context) {
             const SizedBox(height: 6),
             _slot(hero.equipment[EquipSlot.heirloom], EquipSlot.heirloom, controller),
             const SizedBox(height: 16),
-            Align(
+            const Align(
               alignment: Alignment.centerLeft,
               child: Text('Inventory',
                   style: TextStyle(
@@ -74,13 +74,13 @@ Future<void> showEquipment(BuildContext context) {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Palette.wood.withOpacity(0.35),
+                color: Palette.wood.withValues(alpha: 0.35),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Palette.parchmentShadow, width: 1.5),
               ),
               child: state.inventory.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.all(14),
+                  ? const Padding(
+                      padding: EdgeInsets.all(14),
                       child: Text('No loose gear. Send your hero questing!',
                           style: TextStyle(color: Palette.inkSoft, fontSize: 12)),
                     )
@@ -98,7 +98,7 @@ Future<void> showEquipment(BuildContext context) {
             ),
             const SizedBox(height: 4),
             Text('Tap a slot to unequip · tap inventory to equip',
-                style: TextStyle(color: Palette.inkSoft.withOpacity(0.7), fontSize: 10)),
+                style: TextStyle(color: Palette.inkSoft.withValues(alpha: 0.7), fontSize: 10)),
           ],
         );
       },

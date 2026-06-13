@@ -42,14 +42,14 @@ class ItemFrame extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          gradient: RadialGradient(colors: [rarity.withOpacity(0.4), Palette.woodDark]),
+          gradient: RadialGradient(colors: [rarity.withValues(alpha: 0.4), Palette.woodDark]),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: selected ? Palette.goldLight : rarity,
             width: selected ? 3 : 2,
           ),
           boxShadow: glow
-              ? [BoxShadow(color: rarity.withOpacity(0.7), blurRadius: 10)]
+              ? [BoxShadow(color: rarity.withValues(alpha: 0.7), blurRadius: 10)]
               : null,
         ),
         child: Stack(

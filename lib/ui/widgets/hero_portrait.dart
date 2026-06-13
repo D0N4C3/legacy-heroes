@@ -43,7 +43,7 @@ class HeroPortrait extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: RadialGradient(colors: [
-          (memorial ? Palette.parchmentShadow : tint).withOpacity(0.4),
+          (memorial ? Palette.parchmentShadow : tint).withValues(alpha: 0.4),
           Palette.woodDark,
         ]),
         border: Border.all(
@@ -51,7 +51,7 @@ class HeroPortrait extends StatelessWidget {
           width: highlighted ? 4 : 3,
         ),
         boxShadow: highlighted
-            ? [BoxShadow(color: Palette.goldLight.withOpacity(0.6), blurRadius: 14)]
+            ? [BoxShadow(color: Palette.goldLight.withValues(alpha: 0.6), blurRadius: 14)]
             : null,
       ),
       child: ClipOval(

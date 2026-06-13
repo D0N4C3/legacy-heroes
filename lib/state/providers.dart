@@ -5,8 +5,11 @@ import '../core/services/analytics_service.dart';
 import '../core/services/save_service.dart';
 import '../features/activities/data/activity_repository.dart';
 import '../features/activities/domain/activity.dart';
+import '../features/combat/domain/combat_state.dart';
 import '../game/scene_type.dart';
+import 'combat_controller.dart';
 import 'game_controller.dart';
+import 'game_state.dart';
 
 // ── Services ───────────────────────────────────────────────────────────────
 final saveServiceProvider = Provider<SaveService>((ref) => SaveService());
@@ -43,4 +46,30 @@ final currentSceneProvider = Provider<SceneType>((ref) {
   final state = ref.watch(gameControllerProvider);
   final def = ref.watch(activeActivityDefProvider);
   return state.sceneFor(def);
+});
+
+// ── Combat mini-game (Phase 2) ──────────────────────────────────────────────
+/// Drives the real-time combat mini-game, starting/stopping its encounter as
+/// the active activity (and thus scene) changes.
+final combatControllerProvider =
+    StateNotifierProvider<CombatController, CombatState>((ref) {
+  final controller = CombatController(ref);
+  ref.listen<ActivityDef?>(activeActivityDefProvider, (previous, next) {
+    final hero = ref.read(gameControllerProvider).hero;
+    if (hero != null &&
+        next != null &&
+        (next.scene == SceneType.dungeon || next.scene == SceneType.boss)) {
+      controller.startEncounter(next, hero);
+    } else {
+      controller.reset();
+    }
+  }, fireImmediately: true);
+  return controller;
+});
+
+/// Whether the combat controls cluster should be shown right now.
+final combatActiveProvider = Provider<bool>((ref) {
+  final hasHero = ref.watch(gameControllerProvider).hasHero;
+  final scene = ref.watch(currentSceneProvider);
+  return hasHero && (scene == SceneType.dungeon || scene == SceneType.boss);
 });
