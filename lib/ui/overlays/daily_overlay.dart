@@ -31,7 +31,12 @@ Future<void> showDailyReward(BuildContext context) {
               alignment: WrapAlignment.center,
               children: List.generate(GameConstants.dailyRewards.length, (i) {
                 final reward = GameConstants.dailyRewards[i];
-                final claimed = i < todayIndex || (i == todayIndex && !canClaim);
+                // Only days strictly before today's slot are already claimed.
+                // The slot at [todayIndex] is either claimable now (isToday) or,
+                // if today's reward is already taken, the locked "next" reward —
+                // it must NOT show a claimed checkmark (that was the bug where
+                // claiming Day 1 also ticked Day 2).
+                final claimed = i < todayIndex;
                 final isToday = i == todayIndex && canClaim;
                 final gems = (reward['gems'] ?? 0) > 0;
                 return Container(

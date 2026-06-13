@@ -18,9 +18,9 @@ class CombatControls extends ConsumerWidget {
     final combat = ref.watch(combatControllerProvider);
     final controller = ref.read(combatControllerProvider.notifier);
 
-    final canRunForward = !combat.autoMode &&
-        (combat.phase == CombatPhase.approaching ||
-            combat.phase == CombatPhase.enemyDefeated);
+    // Charge skips the walk-up in either mode; Attack is the manual swing.
+    final canCharge = combat.phase == CombatPhase.approaching ||
+        combat.phase == CombatPhase.enemyDefeated;
     final canAttack = !combat.autoMode && combat.phase == CombatPhase.engaged;
 
     return Column(
@@ -28,8 +28,8 @@ class CombatControls extends ConsumerWidget {
       children: [
         _CombatButton(
           icon: Icons.directions_run,
-          label: 'Run',
-          enabled: canRunForward,
+          label: 'Charge',
+          enabled: canCharge,
           onTap: controller.runForward,
         ),
         const SizedBox(height: 10),

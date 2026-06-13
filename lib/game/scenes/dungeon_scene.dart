@@ -42,9 +42,10 @@ class DungeonScene extends GameScene {
   @override
   void layout(Vector2 size) {
     final groundY = size.y * 0.62;
-    heroAvatar?.position = Vector2(size.x * 0.34, groundY);
+    heroAvatar?.position = Vector2(size.x * combatBaseX, groundY);
     children.whereType<EnemyComponent>().forEach((e) {
-      e.position = Vector2(size.x * 0.68, groundY);
+      e.homeX = size.x * combatEngageX;
+      e.position = Vector2(e.homeX, groundY);
     });
   }
 

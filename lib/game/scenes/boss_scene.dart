@@ -14,10 +14,10 @@ class BossScene extends GameScene {
   BossScene({required super.heroClassId, required super.heroAnim});
 
   @override
-  double get combatBaseX => 0.28;
+  double get combatBaseX => 0.26;
 
   @override
-  double get combatEngageX => 0.46;
+  double get combatEngageX => 0.60;
 
   @override
   void build() {
@@ -44,9 +44,10 @@ class BossScene extends GameScene {
   @override
   void layout(Vector2 size) {
     final groundY = size.y * 0.64;
-    heroAvatar?.position = Vector2(size.x * 0.28, groundY);
+    heroAvatar?.position = Vector2(size.x * combatBaseX, groundY);
     children.whereType<EnemyComponent>().forEach((e) {
-      e.position = Vector2(size.x * 0.70, groundY);
+      e.homeX = size.x * combatEngageX;
+      e.position = Vector2(e.homeX, groundY);
     });
   }
 

@@ -188,7 +188,7 @@ class GameController extends StateNotifier<GameState> {
       story = '${hero.name} was overwhelmed but escaped with their life.';
     } else {
       if (chance(def.lootChance)) {
-        loot.add(LootFactory.roll(def.lootTier));
+        loot.add(LootFactory.roll(def.lootTier, classId: hero.classId));
       }
       // Boss / ruins can yield a passdown heirloom.
       if (def.lootTier >= 3 && chance(0.18)) {

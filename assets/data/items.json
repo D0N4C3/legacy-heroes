@@ -1,6 +1,20 @@
 {
   "prefixes": ["Rusty", "Sturdy", "Fine", "Keen", "Blessed", "Ancient", "Dragonbone", "Eternal"],
   "weapons": ["Sword", "Bow", "Staff", "Mace", "Dagger", "Warhammer"],
+  "classWeapons": {
+    "warrior": ["Longsword", "Broadsword", "Greatblade", "War Cleaver", "Knight's Saber"],
+    "ranger": ["Hunting Bow", "Longbow", "Recurve Bow", "Yew Bow", "Hawkeye Bow"],
+    "mage": ["Oak Staff", "Crystal Staff", "Runed Wand", "Arcane Scepter", "Starcaller Staff"],
+    "paladin": ["Holy Mace", "Blessed Maul", "Dawnbreaker Hammer", "Sanctified Flail", "Lightbringer Mace"],
+    "blacksmith": ["Forge Hammer", "Smithing Maul", "Iron Hammer", "Anvil Crusher", "Emberforge Hammer"]
+  },
+  "classArmor": {
+    "warrior": ["Battle Plate", "Iron Cuirass", "Warlord's Mail"],
+    "ranger": ["Scout's Leathers", "Ranger's Cloak Vest", "Forest Garb"],
+    "mage": ["Arcane Robe", "Enchanter's Vestments", "Starweave Robe"],
+    "paladin": ["Blessed Plate", "Holy Aegis Armor", "Templar Cuirass"],
+    "blacksmith": ["Forged Apron Mail", "Smith's Hauberk", "Emberhide Vest"]
+  },
   "armor": ["Tunic", "Chainmail", "Plate", "Robe", "Leathers"],
   "helmets": ["Cap", "Hood", "Helm", "Crown"],
   "rings": ["Band", "Signet", "Loop"],

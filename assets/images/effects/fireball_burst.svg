@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="burstCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFBE9"/>
+      <stop offset="40%" stop-color="#FFD23F"/>
+      <stop offset="75%" stop-color="#FF7A1A"/>
+      <stop offset="100%" stop-color="#D9320A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- radiating flame spikes -->
+  <g fill="#FF9A2E">
+    <path d="M32 2 L37 28 L27 28 Z"/>
+    <path d="M62 32 L36 37 L36 27 Z"/>
+    <path d="M32 62 L27 36 L37 36 Z"/>
+    <path d="M2 32 L28 27 L28 37 Z"/>
+    <path d="M52 12 L36 30 L34 22 Z"/>
+    <path d="M52 52 L34 36 L42 34 Z"/>
+    <path d="M12 52 L30 36 L22 34 Z"/>
+    <path d="M12 12 L30 28 L22 30 Z"/>
+  </g>
+  <!-- bright core -->
+  <circle cx="32" cy="32" r="20" fill="url(#burstCore)"/>
+  <circle cx="32" cy="32" r="9" fill="#FFFBE9"/>
+</svg>

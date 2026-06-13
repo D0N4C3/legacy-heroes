@@ -78,6 +78,21 @@ class GameConstants {
   /// How often Auto mode advances the encounter (run forward + attack).
   static const Duration combatAutoInterval = Duration(milliseconds: 1100);
 
+  /// The internal heartbeat that drives the continuous idle-combat loop
+  /// (approach → engage → defeat → next). Fine-grained so phase transitions
+  /// feel responsive.
+  static const Duration combatLoopTick = Duration(milliseconds: 120);
+
+  /// How long the hero "walks forward" toward the next foe before engaging —
+  /// the world scrolls and the next enemy strides in during this window.
+  static const Duration combatApproachTime = Duration(milliseconds: 1400);
+
+  /// Beat held on a slain foe before the hero marches on to the next.
+  static const Duration combatDefeatPause = Duration(milliseconds: 650);
+
+  /// Cadence of automatic attacks while engaged (Auto mode / idle combat).
+  static const Duration combatAttackInterval = Duration(milliseconds: 850);
+
   /// Number of foes kept queued during an encounter.
   static const int combatQueueSize = 3;
 
