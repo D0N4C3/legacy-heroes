@@ -465,18 +465,49 @@ class HeroArt {
         break;
     }
 
-    // Eyes.
+    // Rosy cheeks for a warm, storybook face.
+    final cheek = Paint()..color = const Color(0x33E0736B);
+    canvas.drawCircle(const Offset(-8, 7), 2.6, cheek);
+    canvas.drawCircle(const Offset(8, 7), 2.6, cheek);
+
+    // Expressive eyes with catch-lights, plus brows for character.
     final eye = Paint()..color = const Color(0xFF2A2A2A);
+    final white = Paint()..color = Colors.white;
+    final brow = Paint()
+      ..color = const Color(0xFF3A2A1A)
+      ..strokeWidth = 1.5
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
     if (blinking) {
       final p = Paint()
         ..color = const Color(0xFF2A2A2A)
-        ..strokeWidth = 1.6
+        ..strokeWidth = 1.8
+        ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke;
-      canvas.drawLine(const Offset(-7, 3), const Offset(-3, 3), p);
-      canvas.drawLine(const Offset(3, 3), const Offset(7, 3), p);
+      canvas.drawLine(const Offset(-7.5, 3), const Offset(-2.5, 3), p);
+      canvas.drawLine(const Offset(2.5, 3), const Offset(7.5, 3), p);
     } else {
-      canvas.drawCircle(const Offset(-5, 3), 2, eye);
-      canvas.drawCircle(const Offset(5, 3), 2, eye);
+      canvas.drawCircle(const Offset(-5, 3), 2.7, eye);
+      canvas.drawCircle(const Offset(5, 3), 2.7, eye);
+      canvas.drawCircle(const Offset(-4.1, 2.1), 0.9, white);
+      canvas.drawCircle(const Offset(5.9, 2.1), 0.9, white);
+      canvas.drawLine(const Offset(-8, -2.5), const Offset(-2.5, -3.5), brow);
+      canvas.drawLine(const Offset(2.5, -3.5), const Offset(8, -2.5), brow);
+    }
+
+    // A small friendly smile (skipped under a big beard).
+    if (!v.beard) {
+      canvas.drawArc(
+        Rect.fromCenter(center: const Offset(0, 7), width: 9, height: 6),
+        0.15,
+        2.6,
+        false,
+        Paint()
+          ..color = const Color(0xFF7A4A3A)
+          ..strokeWidth = 1.4
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+      );
     }
 
     // Beard (mage/blacksmith).

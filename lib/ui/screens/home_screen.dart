@@ -54,6 +54,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         scene: scene,
         classId: hero.classId,
         anim: _animFor(scene),
+        generation: state.generation,
       );
     }
 

@@ -5,7 +5,7 @@ import 'package:flame/components.dart';
 
 import 'game_sized.dart';
 
-enum ParticleMode { fireflies, embers, dust, sparks }
+enum ParticleMode { fireflies, embers, dust, sparks, leaves }
 
 class _P {
   double x, y, vx, vy, life, maxLife, size, phase;
@@ -62,6 +62,13 @@ class ParticleField extends PositionComponent with GameSized {
             (_rng.nextDouble() - 0.5) * 120, -40 - _rng.nextDouble() * 80,
             0, 0.6 + _rng.nextDouble() * 0.5,
             1 + _rng.nextDouble() * 2, 0);
+      case ParticleMode.leaves:
+        // Drift gently down from the canopy with a lazy horizontal sway.
+        final maxLeafLife = 5.0 + _rng.nextDouble() * 4;
+        return _P(_rng.nextDouble() * w, _rng.nextDouble() * h * 0.5,
+            (_rng.nextDouble() - 0.5) * 12, 14 + _rng.nextDouble() * 18,
+            initial ? _rng.nextDouble() * maxLeafLife : 0, maxLeafLife,
+            2 + _rng.nextDouble() * 2.5, _rng.nextDouble() * pi * 2);
     }
   }
 
@@ -76,6 +83,11 @@ class ParticleField extends PositionComponent with GameSized {
       p.y += p.vy * dt;
       if (mode == ParticleMode.embers) p.vy *= 0.99;
       if (mode == ParticleMode.dust && p.x > w) p.x = 0;
+      if (mode == ParticleMode.leaves) {
+        // Sway side to side as they fall.
+        p.x += sin(p.life * 1.6 + p.phase) * 14 * dt;
+        if (p.y > h) p.life = p.maxLife;
+      }
       if (p.life >= p.maxLife) _particles[i] = _spawn();
     }
   }
@@ -83,6 +95,23 @@ class ParticleField extends PositionComponent with GameSized {
   @override
   void render(Canvas canvas) {
     if (!_seeded) return;
+    // Leaves read as crisp little tumbling blades, not soft glows.
+    if (mode == ParticleMode.leaves) {
+      final leaf = Paint();
+      for (final p in _particles) {
+        final t = (p.life / p.maxLife).clamp(0.0, 1.0);
+        final fade = sin(t * pi);
+        leaf.color = color.withValues(alpha: fade.clamp(0.0, 1.0).toDouble() * 0.85);
+        canvas.save();
+        canvas.translate(p.x, p.y);
+        canvas.rotate(p.life * 2 + p.phase);
+        canvas.drawOval(
+            Rect.fromCenter(center: Offset.zero, width: p.size * 2.4, height: p.size * 1.2),
+            leaf);
+        canvas.restore();
+      }
+      return;
+    }
     final paint = Paint()..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.5);
     for (final p in _particles) {
       final t = (p.life / p.maxLife).clamp(0.0, 1.0);

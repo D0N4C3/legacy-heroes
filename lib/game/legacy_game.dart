@@ -25,6 +25,7 @@ class LegacyGame extends FlameGame {
   SceneType _type = SceneType.village;
   String _heroClassId = 'warrior';
   HeroAnim _anim = HeroAnim.idle;
+  int _generation = 1;
   GameScene? _scene;
   bool _ready = false;
 
@@ -73,11 +74,14 @@ class LegacyGame extends FlameGame {
     required SceneType scene,
     required String classId,
     required HeroAnim anim,
+    int generation = 1,
   }) {
     _heroClassId = classId;
     _anim = anim;
+    final genChanged = generation != _generation;
+    _generation = generation;
     if (!_ready) return;
-    if (scene != _type || _scene == null) {
+    if (scene != _type || _scene == null || (genChanged && scene == SceneType.village)) {
       _type = scene;
       _swapScene();
     } else {
@@ -101,8 +105,8 @@ class LegacyGame extends FlameGame {
 
   GameScene _buildScene(SceneType type) {
     final scene = switch (type) {
-      SceneType.village =>
-        VillageScene(heroClassId: _heroClassId, heroAnim: _anim),
+      SceneType.village => VillageScene(
+          heroClassId: _heroClassId, heroAnim: _anim, generation: _generation),
       SceneType.training =>
         TrainingScene(heroClassId: _heroClassId, heroAnim: _anim),
       SceneType.dungeon =>

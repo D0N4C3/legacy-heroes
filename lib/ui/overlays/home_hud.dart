@@ -97,11 +97,11 @@ class _HeroPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [
-          Palette.woodDark.withValues(alpha: 0.86),
-          Palette.wood.withValues(alpha: 0.7),
+          Palette.woodDark.withValues(alpha: 0.74),
+          Palette.wood.withValues(alpha: 0.52),
         ]),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Palette.goldDark, width: 1.5),
@@ -109,8 +109,8 @@ class _HeroPanel extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeroPortrait(classId: hero.classId, size: 58),
-          const SizedBox(width: 10),
+          HeroPortrait(classId: hero.classId, size: 46),
+          const SizedBox(width: 9),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
