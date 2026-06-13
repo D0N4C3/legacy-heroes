@@ -161,6 +161,17 @@ abstract class GameScene extends Component with GameSized {
 
   /// Launch the hero's class-specific strike toward the foe.
   void _spawnAttackEffect(HeroAvatar hero, EnemyComponent enemy) {
+    final to = enemy.position + Vector2(0, enemy.boss ? -90 : -46);
+
+    // The Mage hurls a real SVG fireball from its (taller sprite) staff hand.
+    if (heroClassId == 'mage') {
+      add(FireballProjectile(
+        from: hero.position + Vector2(24, -96),
+        to: to,
+      ));
+      return;
+    }
+
     final weapon = HeroArt.visualFor(heroClassId).weapon;
     final accent = HeroArt.visualFor(heroClassId).accent;
     final style = switch (weapon) {
@@ -169,7 +180,6 @@ abstract class GameScene extends Component with GameSized {
       _ => AttackStyle.melee,
     };
     final from = hero.position + Vector2(20, -60);
-    final to = enemy.position + Vector2(0, enemy.boss ? -90 : -46);
     final color = switch (style) {
       AttackStyle.magic => accent,
       AttackStyle.arrow => const Color(0xFFEAD7AE),

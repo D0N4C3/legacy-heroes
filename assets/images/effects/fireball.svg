@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="fbCore" cx="62%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FFF8DC"/>
+      <stop offset="32%" stop-color="#FFD23F"/>
+      <stop offset="66%" stop-color="#FF7A1A"/>
+      <stop offset="100%" stop-color="#D9320A"/>
+    </radialGradient>
+    <radialGradient id="fbGlow" cx="62%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#FF9A33" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#FF9A33" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- soft outer glow -->
+  <circle cx="40" cy="30" r="26" fill="url(#fbGlow)"/>
+  <!-- trailing flames (point left, so the orb leads to the right) -->
+  <path d="M2 30 C 18 20, 26 24, 34 30 C 26 36, 18 40, 2 30 Z" fill="#FF7A1A" opacity="0.85"/>
+  <path d="M6 30 C 18 24, 22 27, 30 30 C 22 33, 18 36, 6 30 Z" fill="#FFD23F" opacity="0.8"/>
+  <!-- core orb -->
+  <circle cx="40" cy="30" r="17" fill="url(#fbCore)"/>
+  <!-- hot highlight -->
+  <circle cx="34" cy="24" r="5.5" fill="#FFFBE9" opacity="0.92"/>
+</svg>

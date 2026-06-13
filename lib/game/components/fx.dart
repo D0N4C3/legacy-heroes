@@ -4,6 +4,8 @@ import 'package:flame/components.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 
+import 'svg_fx.dart';
+
 /// A floating damage / value number that rises and fades (Visual Plan §7).
 /// Flame applies the component's position transform before [render], so we
 /// draw in local space around the origin.
@@ -214,6 +216,103 @@ class AttackEffect extends PositionComponent {
               ..strokeCap = StrokeCap.round
               ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
         break;
+    }
+  }
+}
+
+/// The Mage's signature **fireball** — an SVG-rendered orb that streaks from
+/// the caster to the foe and detonates in a [FireballBurst]. Falls back to a
+/// code-drawn orb if the SVG isn't decoded yet, so it always reads as fire.
+class FireballProjectile extends PositionComponent {
+  FireballProjectile({required Vector2 from, required this.to})
+      : _from = from.clone() {
+    position = from.clone();
+    priority = 48;
+  }
+
+  static const String svgPath = 'assets/images/effects/fireball.svg';
+
+  final Vector2 _from;
+  final Vector2 to;
+  double _life = 0;
+  double _spin = 0;
+  bool _impacted = false;
+  static const double _dur = 0.30;
+
+  @override
+  Future<void> onLoad() async {
+    await SvgFx.preload(svgPath);
+    await SvgFx.preload(FireballBurst.svgPath);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _life += dt;
+    _spin += dt;
+    final p = (_life / _dur).clamp(0.0, 1.0).toDouble();
+    position = _from + (to - _from) * p;
+    if (p >= 1 && !_impacted) {
+      _impacted = true;
+      parent?.add(FireballBurst(position: to.clone()));
+    }
+    if (_life >= _dur) removeFromParent();
+  }
+
+  @override
+  void render(Canvas canvas) {
+    final size = 48.0 * (0.92 + 0.08 * sin(_spin * 30));
+    if (!SvgFx.draw(canvas, svgPath, size)) {
+      canvas.drawCircle(
+          Offset.zero,
+          size * 0.42,
+          Paint()
+            ..color = const Color(0xFFFF7A1A).withValues(alpha: 0.5)
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6));
+      canvas.drawCircle(
+          Offset.zero, size * 0.24, Paint()..color = const Color(0xFFFFD23F));
+      canvas.drawCircle(const Offset(-3, -3), size * 0.1,
+          Paint()..color = const Color(0xFFFFFBE9));
+    }
+  }
+}
+
+/// The fiery detonation where a fireball lands — an SVG burst that grows and
+/// fades (code-drawn ring fallback).
+class FireballBurst extends PositionComponent {
+  FireballBurst({required Vector2 position}) {
+    this.position = position;
+    priority = 49;
+  }
+
+  static const String svgPath = 'assets/images/effects/fireball_burst.svg';
+
+  double _life = 0;
+  static const double _dur = 0.42;
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _life += dt;
+    if (_life >= _dur) removeFromParent();
+  }
+
+  @override
+  void render(Canvas canvas) {
+    final p = (_life / _dur).clamp(0.0, 1.0).toDouble();
+    final fade = 1 - p;
+    final size = 40 + 52 * p;
+    if (!SvgFx.draw(canvas, svgPath, size, opacity: fade)) {
+      canvas.drawCircle(
+          Offset.zero,
+          size * 0.5,
+          Paint()
+            ..color = const Color(0xFFFF8A2A).withValues(alpha: 0.8 * fade)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 5 * fade + 1
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2));
+      canvas.drawCircle(Offset.zero, size * 0.22,
+          Paint()..color = const Color(0xFFFFD23F).withValues(alpha: fade));
     }
   }
 }
