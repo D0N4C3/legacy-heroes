@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 /// Animation states a hero can be drawn in.
-enum HeroAnim { idle, train, attack, victory, hurt }
+enum HeroAnim { idle, walk, train, attack, victory, hurt }
 
 enum Weapon { sword, bow, staff, mace, hammer }
 
@@ -129,12 +129,22 @@ class HeroArt {
   }) {
     final v = visualFor(classId);
 
-    final bob = sin(t * 2) * 1.6;
+    final walking = anim == HeroAnim.walk;
+
+    // A brisk two-beat bob while walking; gentle breathing otherwise.
+    final bob = walking ? -sin(t * 9).abs() * 2.0 : sin(t * 2) * 1.6;
     final breathe = 1 + sin(t * 3) * 0.03;
-    var lean = anim == HeroAnim.attack ? sin(t * 9).abs() * 0.16 : 0.0;
+
+    // Alternating leg stride for the walk cycle (±units, fed to _drawLegs).
+    final stride = walking ? sin(t * 9) * 6.0 : 0.0;
+
+    var lean = anim == HeroAnim.attack
+        ? sin(t * 9).abs() * 0.16
+        : (walking ? 0.07 : 0.0);
     var armSwing = (anim == HeroAnim.attack || anim == HeroAnim.train)
         ? sin(t * 9) * 0.7
-        : sin(t * 2) * 0.06;
+        : (walking ? sin(t * 9) * 0.45 : sin(t * 2) * 0.06);
+    final backSwing = walking ? -sin(t * 9) * 0.45 : 0.0;
     final armsUp = anim == HeroAnim.victory;
 
     if (attackPulse > 0) {
@@ -166,9 +176,9 @@ class HeroArt {
     canvas.save();
     canvas.rotate(lean);
 
-    _drawLegs(canvas, v);
+    _drawLegs(canvas, v, stride);
     _drawTorso(canvas, v, breathe);
-    _drawBackArm(canvas, v, armsUp);
+    _drawBackArm(canvas, v, armsUp, backSwing);
     _drawHead(canvas, v, blinking);
     _drawFrontArmAndWeapon(canvas, v, armSwing, armsUp, t);
     if (v.hasShield) _drawShield(canvas, v);
@@ -207,14 +217,27 @@ class HeroArt {
   }
 
   // ── Parts ─────────────────────────────────────────────────────────────────
-  static void _drawLegs(Canvas canvas, HeroVisual v) {
+  static void _drawLegs(Canvas canvas, HeroVisual v, [double stride = 0]) {
     final leg = Paint()..color = v.secondary;
-    final boot = Paint()..color = _darken(v.secondary, 0.25);
-    for (final x in [-11.0, 3.0]) {
+    final boot = Paint()..color = _darken(v.secondary, 0.35);
+    final bootCuff = Paint()..color = _darken(v.secondary, 0.15);
+    // Two legs stepping in opposition; the forward foot lifts off the ground a
+    // touch so a moving hero reads as walking, not sliding.
+    final steps = [(-11.0, stride), (3.0, -stride)];
+    for (final (x, dx) in steps) {
+      final lift = dx > 0 ? dx * 0.6 : 0.0;
       canvas.drawRRect(
-          RRect.fromRectAndRadius(Rect.fromLTWH(x, -22, 9, 20), const Radius.circular(4)), leg);
+          RRect.fromRectAndRadius(
+              Rect.fromLTWH(x + dx, -22 - lift, 9, 20), const Radius.circular(4)),
+          leg);
       canvas.drawRRect(
-          RRect.fromRectAndRadius(Rect.fromLTWH(x - 1, -6, 11, 7), const Radius.circular(3)), boot);
+          RRect.fromRectAndRadius(
+              Rect.fromLTWH(x + dx - 1, -8 - lift, 11, 4), const Radius.circular(2)),
+          bootCuff);
+      canvas.drawRRect(
+          RRect.fromRectAndRadius(
+              Rect.fromLTWH(x + dx - 1, -6 - lift, 12, 7), const Radius.circular(3)),
+          boot);
     }
   }
 
@@ -315,10 +338,10 @@ class HeroArt {
     canvas.restore();
   }
 
-  static void _drawBackArm(Canvas canvas, HeroVisual v, bool up) {
+  static void _drawBackArm(Canvas canvas, HeroVisual v, bool up, [double swing = 0]) {
     canvas.save();
     canvas.translate(-15, -52);
-    canvas.rotate(up ? -1.0 : 0.1);
+    canvas.rotate(up ? -1.0 : 0.1 + swing);
     canvas.drawRRect(
         RRect.fromRectAndRadius(const Rect.fromLTWH(-5, 0, 8, 22), const Radius.circular(4)),
         Paint()..color = _darken(v.primary, 0.08));

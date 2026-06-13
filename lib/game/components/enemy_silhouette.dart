@@ -28,9 +28,16 @@ class EnemyComponent extends PositionComponent {
   int health = 0;
   int maxHealth = 0;
 
+  /// The engage position the foe walks up to. Scenes set this in layout().
+  double homeX = 0;
+
   double _t = 0;
   double _hitFlash = 0;
   double _defeat = 0;
+  bool _walkingIn = false;
+
+  /// Whether the foe is currently striding in (used for a walk wobble).
+  bool get isWalkingIn => _walkingIn;
 
   /// Swap in a fresh foe (new type/HP), clearing any in-progress defeat fx.
   void spawn(EnemyType newType, int newHealth, int newMaxHealth) {
@@ -39,6 +46,12 @@ class EnemyComponent extends PositionComponent {
     maxHealth = newMaxHealth;
     _hitFlash = 0;
     _defeat = 0;
+  }
+
+  /// Make the foe stride in from off-screen ([fromX]) to its [homeX].
+  void walkIn(double fromX) {
+    position.x = fromX;
+    _walkingIn = true;
   }
 
   /// Update HP without resetting the visual state (e.g. after a hit).
@@ -58,13 +71,21 @@ class EnemyComponent extends PositionComponent {
     _t += dt;
     if (_hitFlash > 0) _hitFlash = (_hitFlash - dt * 4).clamp(0.0, 1.0);
     if (_defeat > 0) _defeat = (_defeat + dt * 2.5).clamp(0.0, 1.0);
+    if (_walkingIn) {
+      position.x += (homeX - position.x) * (dt * 3.4).clamp(0.0, 1.0);
+      if ((homeX - position.x).abs() < 1.5) {
+        position.x = homeX;
+        _walkingIn = false;
+      }
+    }
   }
 
   @override
   void render(Canvas canvas) {
     EnemyArt.draw(canvas, type, _t,
         boss: boss, hitFlash: _hitFlash, defeatProgress: _defeat);
-    if (maxHealth > 0 && _defeat == 0) _drawHealthBar(canvas);
+    // Hide the HP bar until the foe has marched into engage range.
+    if (maxHealth > 0 && _defeat == 0 && !_walkingIn) _drawHealthBar(canvas);
   }
 
   void _drawHealthBar(Canvas canvas) {

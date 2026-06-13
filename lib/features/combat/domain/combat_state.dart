@@ -27,10 +27,11 @@ class CombatState {
     this.queue = const [],
     this.heroHealth = 0,
     this.heroMaxHealth = 0,
-    this.autoMode = false,
+    this.autoMode = true,
     this.phase = CombatPhase.idle,
     this.hitTick = 0,
     this.enemyHitTick = 0,
+    this.advanceTick = 0,
     this.lastDamageToEnemy = 0,
     this.lastDamageToHero = 0,
     this.lastGoldReward = 0,
@@ -55,6 +56,10 @@ class CombatState {
   /// Bumped whenever the enemy counters and hits the hero.
   final int enemyHitTick;
 
+  /// Bumped whenever the hero marches on to a *fresh* foe — lets the Flame
+  /// layer trigger the new enemy's "stride in from the right" walk-on.
+  final int advanceTick;
+
   final int lastDamageToEnemy;
   final int lastDamageToHero;
   final int lastGoldReward;
@@ -71,6 +76,7 @@ class CombatState {
     CombatPhase? phase,
     int? hitTick,
     int? enemyHitTick,
+    int? advanceTick,
     int? lastDamageToEnemy,
     int? lastDamageToHero,
     int? lastGoldReward,
@@ -85,6 +91,7 @@ class CombatState {
         phase: phase ?? this.phase,
         hitTick: hitTick ?? this.hitTick,
         enemyHitTick: enemyHitTick ?? this.enemyHitTick,
+        advanceTick: advanceTick ?? this.advanceTick,
         lastDamageToEnemy: lastDamageToEnemy ?? this.lastDamageToEnemy,
         lastDamageToHero: lastDamageToHero ?? this.lastDamageToHero,
         lastGoldReward: lastGoldReward ?? this.lastGoldReward,

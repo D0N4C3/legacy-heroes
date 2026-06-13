@@ -32,7 +32,7 @@ class HeroFactory {
       age: GameConstants.heroStartAge,
       stats: cls.base,
       traitIds: [starterTrait],
-      equipment: {EquipSlot.weapon: LootFactory.starterWeapon()},
+      equipment: {EquipSlot.weapon: LootFactory.starterWeapon(cls.id)},
       achievements: const [],
       bornAt: DateTime.now(),
       stage: LifeStage.young,
@@ -85,7 +85,7 @@ class HeroFactory {
     final legacy = candidate.inheritedPower + parent.power * blessingBonus;
 
     final equip = <EquipSlot, EquipmentItem>{
-      EquipSlot.weapon: LootFactory.starterWeapon(),
+      EquipSlot.weapon: LootFactory.starterWeapon(cls.id),
     };
     if (heirloom != null) equip[EquipSlot.heirloom] = heirloom;
 

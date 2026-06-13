@@ -1,8 +1,10 @@
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 
 import '../../app/palette.dart';
 import '../../features/combat/domain/combat_enemy.dart';
 import '../../features/combat/domain/combat_state.dart';
+import '../art/hero_art.dart';
 import '../components/enemy_silhouette.dart';
 import '../components/fx.dart';
 import '../components/game_sized.dart';
@@ -21,18 +23,22 @@ abstract class GameScene extends Component with GameSized {
   HeroAnim heroAnim;
   HeroAvatar? heroAvatar;
 
-  /// Fractional X (of screen width) the hero stands at while approaching a
-  /// foe in the combat mini-game. Dungeon/boss scenes may override this to
-  /// match their hero's resting position.
-  double get combatBaseX => 0.34;
+  /// Hook the game wires up so a scene can shake the whole frame on impact
+  /// (Visual Plan combat juice). No-op until set.
+  void Function(double amount)? onShake;
 
-  /// Fractional X (of screen width) the hero advances to once engaged with
-  /// the current foe.
-  double get combatEngageX => 0.50;
+  /// Fractional X (of screen width) the hero plants at during combat. The hero
+  /// no longer drifts back and forth — foes march in from the right instead, so
+  /// the world reads as scrolling forward. Dungeon/boss scenes may override.
+  double get combatBaseX => 0.30;
+
+  /// Fractional X (of screen width) a foe walks up to before engaging.
+  double get combatEngageX => 0.66;
 
   CombatEnemy? _lastEnemy;
   int _lastHitTick = 0;
   int _lastEnemyHitTick = 0;
+  int _lastAdvanceTick = 0;
 
   /// Build the scene's components (background, props, particles, hero/enemy).
   void build();
@@ -75,18 +81,28 @@ abstract class GameScene extends Component with GameSized {
     if (!combat.active) {
       hero.maxHealth = 0;
       enemy.maxHealth = 0;
-      hero.targetX = w * combatBaseX;
       _lastEnemy = null;
       _lastHitTick = 0;
       _lastEnemyHitTick = 0;
+      _lastAdvanceTick = 0;
       return;
     }
 
     hero.health = combat.heroHealth;
     hero.maxHealth = combat.heroMaxHealth;
 
+    // The hero is planted; foes march in. Animation tracks the combat phase so
+    // the hero walks in place while approaching, then swings while engaged.
+    hero.anim = switch (combat.phase) {
+      CombatPhase.approaching => HeroAnim.walk,
+      CombatPhase.engaged => HeroAnim.attack,
+      CombatPhase.enemyDefeated => HeroAnim.victory,
+      CombatPhase.idle => HeroAnim.idle,
+    };
+
     final current = combat.current;
-    if (!identical(current, _lastEnemy)) {
+    final freshFoe = !identical(current, _lastEnemy);
+    if (freshFoe) {
       if (current != null) {
         enemy.spawn(current.type, current.health, current.maxHealth);
       }
@@ -95,16 +111,25 @@ abstract class GameScene extends Component with GameSized {
       enemy.setHealth(current.health);
     }
 
+    // Stride the new foe in from off-screen right on each advance.
+    if (combat.advanceTick != _lastAdvanceTick || freshFoe) {
+      _lastAdvanceTick = combat.advanceTick;
+      if (current != null) enemy.walkIn(w + 120);
+    }
+
     if (combat.hitTick != _lastHitTick) {
       _lastHitTick = combat.hitTick;
       hero.pulseAttack();
       enemy.flashHit();
+      _spawnAttackEffect(hero, enemy);
+      onShake?.call(5);
       add(DamageNumber(
-        position: enemy.position + Vector2(0, -100),
+        position: enemy.position + Vector2(0, enemy.boss ? -170 : -100),
         text: '${combat.lastDamageToEnemy}',
       ));
       if (current == null || current.isDefeated) {
         enemy.startDefeat();
+        onShake?.call(9);
         add(GoldBurst(position: enemy.position.clone()));
         add(DamageNumber(
           position: enemy.position + Vector2(-20, -130),
@@ -122,6 +147,7 @@ abstract class GameScene extends Component with GameSized {
     if (combat.enemyHitTick != _lastEnemyHitTick) {
       _lastEnemyHitTick = combat.enemyHitTick;
       hero.flashHit();
+      onShake?.call(7);
       add(DamageNumber(
         position: hero.position + Vector2(0, -110),
         text: '${combat.lastDamageToHero}',
@@ -129,9 +155,26 @@ abstract class GameScene extends Component with GameSized {
       ));
     }
 
-    hero.targetX = switch (combat.phase) {
-      CombatPhase.engaged || CombatPhase.enemyDefeated => w * combatEngageX,
-      CombatPhase.approaching || CombatPhase.idle => w * combatBaseX,
+    // Keep the hero rooted at its combat mark — never step backward.
+    hero.targetX = w * combatBaseX;
+  }
+
+  /// Launch the hero's class-specific strike toward the foe.
+  void _spawnAttackEffect(HeroAvatar hero, EnemyComponent enemy) {
+    final weapon = HeroArt.visualFor(heroClassId).weapon;
+    final accent = HeroArt.visualFor(heroClassId).accent;
+    final style = switch (weapon) {
+      Weapon.staff => AttackStyle.magic,
+      Weapon.bow => AttackStyle.arrow,
+      _ => AttackStyle.melee,
     };
+    final from = hero.position + Vector2(20, -60);
+    final to = enemy.position + Vector2(0, enemy.boss ? -90 : -46);
+    final color = switch (style) {
+      AttackStyle.magic => accent,
+      AttackStyle.arrow => const Color(0xFFEAD7AE),
+      AttackStyle.melee => const Color(0xFFFFF1C4),
+    };
+    add(AttackEffect(from: from, to: to, style: style, color: color));
   }
 }
