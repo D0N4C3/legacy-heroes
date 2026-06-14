@@ -20,7 +20,7 @@ class GoblinSprites {
   static const String dyingPath = 'heroes/goblin-dying-sprite-sheet.webp';
 
   /// Content sits roughly centered with feet ≈ y182 inside each 256px frame.
-  /// Source art faces right; the enemy is flipped to face the hero on the left.
+  /// Source art already faces left, toward the hero — no flip needed.
   static const Anchor footAnchor = Anchor(0.49, 0.71);
 
   /// Total runtime of the death clip, matched to [EnemyComponent]'s defeat

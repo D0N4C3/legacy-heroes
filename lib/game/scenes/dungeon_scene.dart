@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/utils/rng.dart';
 import '../components/enemy_silhouette.dart';
+import '../components/ground_details.dart';
 import '../components/hero_avatar.dart';
 import '../components/particle_field.dart';
 import '../components/prop_component.dart';
@@ -25,6 +26,14 @@ class DungeonScene extends GameScene {
       stars: true,
       groundLevel: 0.62,
       priority: 0,
+    ));
+    add(GroundDetails(
+      colors: const [
+        Color(0xFF362845),
+        Color(0xFF1B1220),
+        Color(0xFF4A3A5C),
+      ],
+      groundLevel: 0.62,
     ));
     add(PropComponent(_drawCave, priority: 2));
     add(EnemyComponent(

@@ -8,6 +8,7 @@ import '../art/hero_art.dart';
 import '../components/enemy_silhouette.dart';
 import '../components/fx.dart';
 import '../components/game_sized.dart';
+import '../components/ground_details.dart';
 import '../components/hero_avatar.dart';
 
 /// Base class for every Flame scene (Visual Plan §4 "Scene System").
@@ -34,6 +35,10 @@ abstract class GameScene extends Component with GameSized {
 
   /// Fractional X (of screen width) a foe walks up to before engaging.
   double get combatEngageX => 0.66;
+
+  /// Pixels the [GroundDetails] band glides forward on each encounter
+  /// advance — the "marching through the dungeon" cue.
+  static const double _groundAdvanceStep = 90;
 
   CombatEnemy? _lastEnemy;
   int _lastHitTick = 0;
@@ -111,10 +116,14 @@ abstract class GameScene extends Component with GameSized {
       enemy.setHealth(current.health);
     }
 
-    // Stride the new foe in from off-screen right on each advance.
+    // Stride the new foe in from off-screen right on each advance, and glide
+    // the ground details forward so the scene reads as marching onward.
     if (combat.advanceTick != _lastAdvanceTick || freshFoe) {
       _lastAdvanceTick = combat.advanceTick;
       if (current != null) enemy.walkIn(w + 120);
+      for (final g in children.whereType<GroundDetails>()) {
+        g.advance(_groundAdvanceStep);
+      }
     }
 
     if (combat.hitTick != _lastHitTick) {

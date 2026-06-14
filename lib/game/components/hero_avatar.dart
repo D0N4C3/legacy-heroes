@@ -55,9 +55,6 @@ class HeroAvatar extends PositionComponent {
   /// On-screen height of the sprite (the 256px frame is scaled to this).
   static const double _spriteRenderSize = 230;
 
-  /// Source sprites face left; flip so the hero faces the foes on the right.
-  static const bool _spriteFacesRight = true;
-
   Map<HeroAnim, SpriteAnimation>? _anims;
   SpriteAnimationTicker? _ticker;
   HeroAnim? _tickerAnim;
@@ -150,8 +147,6 @@ class HeroAvatar extends PositionComponent {
     if (_anims != null && ticker != null) {
       final sprite = ticker.getSprite();
       final s = _spriteRenderSize * _scale;
-      canvas.save();
-      if (_spriteFacesRight) canvas.scale(-1, 1); // mirror to face the foe
       sprite.render(
         canvas,
         position: Vector2.zero(),
@@ -165,7 +160,6 @@ class HeroAvatar extends PositionComponent {
                 ))
             : null,
       );
-      canvas.restore();
       if (maxHealth > 0) _drawHealthBar(canvas, -150);
       return;
     }
