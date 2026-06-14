@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../components/enemy_silhouette.dart';
+import '../components/ground_details.dart';
 import '../components/hero_avatar.dart';
 import '../components/particle_field.dart';
 import '../components/prop_component.dart';
@@ -29,6 +30,14 @@ class BossScene extends GameScene {
       hillColor: const Color(0xFF120406),
       groundLevel: 0.64,
       priority: 0,
+    ));
+    add(GroundDetails(
+      colors: [
+        const Color(0xFF5A1E12),
+        const Color(0xFF1A0608),
+        const Color(0xFFFF5A2B).withValues(alpha: 0.35),
+      ],
+      groundLevel: 0.64,
     ));
     add(PropComponent(_drawGate, priority: 2));
     add(EnemyComponent(

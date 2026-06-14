@@ -50,9 +50,6 @@ class EnemyComponent extends PositionComponent {
   /// On-screen height of the sprite (the 256px frame is scaled to this).
   static const double _spriteRenderSize = 190;
 
-  /// Source sprites face right; flip so the foe faces the hero on the left.
-  static const bool _spriteFacesAwayFromHero = true;
-
   Map<GoblinAnim, SpriteAnimation>? _anims;
   SpriteAnimationTicker? _ticker;
   GoblinAnim? _tickerAnim;
@@ -172,8 +169,6 @@ class EnemyComponent extends PositionComponent {
       // [GoblinSprites.defeatDuration]).
       final fade =
           _defeat > 0.6 ? (1 - (_defeat - 0.6) / 0.4).clamp(0.0, 1.0) : 1.0;
-      canvas.save();
-      if (_spriteFacesAwayFromHero) canvas.scale(-1, 1);
       if (fade < 1.0) {
         canvas.saveLayer(
             null, Paint()..color = Color.fromRGBO(255, 255, 255, fade));
@@ -192,7 +187,6 @@ class EnemyComponent extends PositionComponent {
             : null,
       );
       if (fade < 1.0) canvas.restore();
-      canvas.restore();
       if (maxHealth > 0 && _defeat == 0 && !_walkingIn) _drawHealthBar(canvas);
       return;
     }
