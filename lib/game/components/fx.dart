@@ -317,6 +317,51 @@ class FireballBurst extends PositionComponent {
   }
 }
 
+/// A quick glinting blade flash where a foe's blow lands on the hero — an SVG
+/// sword-slash crescent that streaks and fades (code-drawn arc fallback).
+class SwordSlash extends PositionComponent {
+  SwordSlash({required Vector2 position}) {
+    this.position = position;
+    priority = 49;
+  }
+
+  static const String svgPath = 'assets/images/effects/sword_slash.svg';
+
+  double _life = 0;
+  static const double _dur = 0.24;
+
+  @override
+  Future<void> onLoad() async {
+    await SvgFx.preload(svgPath);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _life += dt;
+    if (_life >= _dur) removeFromParent();
+  }
+
+  @override
+  void render(Canvas canvas) {
+    final p = (_life / _dur).clamp(0.0, 1.0).toDouble();
+    final fade = p < 0.6 ? 1.0 : (1 - (p - 0.6) / 0.4);
+    final size = 58 + 20 * p;
+    if (!SvgFx.draw(canvas, svgPath, size, opacity: fade)) {
+      canvas.drawArc(
+          Rect.fromCircle(center: Offset.zero, radius: 26),
+          -1.3 + p * 1.2,
+          1.2,
+          false,
+          Paint()
+            ..color = Colors.white.withValues(alpha: 0.9 * fade)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 5
+            ..strokeCap = StrokeCap.round);
+    }
+  }
+}
+
 /// A short-lived spark pop where a blow or projectile lands.
 class ImpactBurst extends PositionComponent {
   ImpactBurst({

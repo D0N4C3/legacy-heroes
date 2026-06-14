@@ -147,6 +147,8 @@ abstract class GameScene extends Component with GameSized {
     if (combat.enemyHitTick != _lastEnemyHitTick) {
       _lastEnemyHitTick = combat.enemyHitTick;
       hero.flashHit();
+      enemy.playAttack();
+      add(SwordSlash(position: hero.position + Vector2(10, -90)));
       onShake?.call(7);
       add(DamageNumber(
         position: hero.position + Vector2(0, -110),

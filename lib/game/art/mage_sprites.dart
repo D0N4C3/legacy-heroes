@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
-import 'package:flame/sprite.dart';
 
 import 'hero_art.dart' show HeroAnim;
 
@@ -15,9 +14,9 @@ import 'hero_art.dart' show HeroAnim;
 class MageSprites {
   MageSprites._();
 
-  static const String idlePath = 'heroes/mage_idle.png';
-  static const String walkPath = 'heroes/mage_walk.png';
-  static const String attackPath = 'heroes/mage_attack.png';
+  static const String idlePath = 'heroes/mage_idle.webp';
+  static const String walkPath = 'heroes/mage_walk.webp';
+  static const String attackPath = 'heroes/mage_attack.webp';
 
   /// Content sits at x≈[73..178], feet ≈ y190 inside each 256px frame, so this
   /// anchor drops the character's feet exactly on a host component's origin.
@@ -30,9 +29,11 @@ class MageSprites {
     final frames = <SpriteAnimationFrame>[
       for (var i = 0; i < count; i++)
         SpriteAnimationFrame(
-          Sprite(img,
-              srcPosition: Vector2(1 + i * _stride, 1),
-              srcSize: Vector2(_frame, _frame)),
+          Sprite(
+            img,
+            srcPosition: Vector2(1 + i * _stride, 1),
+            srcSize: Vector2(_frame, _frame),
+          ),
           step,
         ),
     ];

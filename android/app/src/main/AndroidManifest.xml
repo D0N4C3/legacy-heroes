@@ -16,7 +16,8 @@
     <application
         android:label="Legacy Heroes"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:extractNativeLibs="false">
 
         <!-- AdMob App ID. Replace with your real ID before publishing. -->

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
@@ -91,7 +90,7 @@ class HeroAvatar extends PositionComponent {
     if (_loadingSprites) return;
     _loadingSprites = true;
     try {
-      final game = findGame() as FlameGame?;
+      final game = findGame();
       if (game == null) return;
       _anims = await MageSprites.load(game.images);
       _loadedClass = classId;
@@ -122,7 +121,9 @@ class HeroAvatar extends PositionComponent {
       _nextBlink = 2 + _rng.nextDouble() * 3;
     }
     if (_hitFlash > 0) _hitFlash = (_hitFlash - dt * 4).clamp(0.0, 1.0);
-    if (_attackPulse > 0) _attackPulse = (_attackPulse - dt * 6).clamp(0.0, 1.0);
+    if (_attackPulse > 0) {
+      _attackPulse = (_attackPulse - dt * 6).clamp(0.0, 1.0);
+    }
 
     final tx = targetX;
     if (tx != null) {
@@ -158,9 +159,10 @@ class HeroAvatar extends PositionComponent {
         anchor: MageSprites.footAnchor,
         overridePaint: _hitFlash > 0
             ? (Paint()
-              ..colorFilter = ColorFilter.mode(
+                ..colorFilter = ColorFilter.mode(
                   Color.fromRGBO(255, 80, 80, _hitFlash.clamp(0.0, 1.0)),
-                  BlendMode.srcATop))
+                  BlendMode.srcATop,
+                ))
             : null,
       );
       canvas.restore();
@@ -187,16 +189,26 @@ class HeroAvatar extends PositionComponent {
   void _drawHealthBar(Canvas canvas, double topY) {
     const width = 60.0;
     const barHeight = 6.0;
-    final rect = Rect.fromLTWH(-width / 2, topY - barHeight / 2, width, barHeight);
+    final rect = Rect.fromLTWH(
+      -width / 2,
+      topY - barHeight / 2,
+      width,
+      barHeight,
+    );
     const radius = Radius.circular(3);
 
-    canvas.drawRRect(RRect.fromRectAndRadius(rect, radius),
-        Paint()..color = const Color(0xFF1A1018));
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, radius),
+      Paint()..color = const Color(0xFF1A1018),
+    );
 
     final pct = maxHealth == 0 ? 0.0 : (health / maxHealth).clamp(0.0, 1.0);
     if (pct > 0) {
       final fill = Rect.fromLTWH(rect.left, rect.top, width * pct, barHeight);
-      canvas.drawRRect(RRect.fromRectAndRadius(fill, radius), Paint()..color = Palette.xp);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(fill, radius),
+        Paint()..color = Palette.xp,
+      );
     }
 
     canvas.drawRRect(

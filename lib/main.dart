@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +30,11 @@ Future<void> main() async {
   if (FirebaseService.instance.ready) {
     // Send uncaught Flutter errors to Crashlytics (plan §9).
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    // Also catch errors outside the Flutter framework (async callbacks, zones).
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
 
     // Anonymous sign-in, then enable cloud-save mirroring (plan §9 / §10).
     final uid = await AuthService().signInAnonymously();
